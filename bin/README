@@ -1,10 +1,22 @@
-AUTHORS: Jei Yoo, Volodymyr Zavidovych. Based on code by Robert Duvall
-##############
-PURPOSE: Duke CPS308 Fall 2012 Springie Assignment 2
-##############
-GOAL: Extend program's functionality without jeopardizing code flexibility
-##############
-ADDED FUNCTIONALITY: 
+README
+
+Name: Jei Min Yoo (NETID: jy48), Volodymyr Zavidovych (NETID: vz4)
+Date started: 9/13/12
+Date finished: 9/17/12
+Estimated hours worked: 20
+Resources: 
+http://docs.oracle.com/javase/tutorial/extra/fullscreen/doublebuf.html
+http://docs.oracle.com/javase/6/docs/api/
+http://www.wikipedia.org
+
+
+Main file: Main.java
+Test file: example
+Resource files: none
+
+
+Known bugs: nothing that we can think of.
+FUNCTIONALITY: 
 - Fixed mass. Implemented via boolean isFixed field
 - Bar. Implemented via forceLengthToNatural() method, which shifts spring's 
   masses along bar axis to set distance between masses equal to bar's initial length.
@@ -17,8 +29,4 @@ ADDED FUNCTIONALITY:
 - Muscle. Is a bar with variable myLength. Inherits Spring class. Changes the natural
   length periodically within the amplitude. Then uses inherited forceLengthToNatural() 
   to move masses.
-##############
-KNOWN ISSUES: None
-  
-  
-
+Impressions: working in pairs was fun and productive. implementing bars was difficult.

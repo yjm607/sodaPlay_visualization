@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+
 /**
  * Reads objects from files and puts them into object lists
  * 
@@ -56,7 +57,7 @@ public class Factory {
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         double amplitude = line.nextDouble();
-        return new Muscle(sim.getMass(m1), sim.getMass(m2),
-                restLength, ks, amplitude);
+        return new Muscle(sim.getMass(m1), sim.getMass(m2), restLength, ks,
+                amplitude);
     }
 }
