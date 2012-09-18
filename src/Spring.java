@@ -75,12 +75,10 @@ public class Spring {
         double myAngle = Math.toRadians(Force.angleBetween(dx, dy));
         double myDistanceBetweenPoints = Force.distanceBetween(dx, dy);
         double myLengthIncrement = (myLength - myDistanceBetweenPoints) / 2;
-        if (!myStart.isFixed())
-        {
+        if (!myStart.isFixed()) {
             myStart.shiftCenter(myLengthIncrement, myAngle);
         }
-        if (!myEnd.isFixed())
-        {
+        if (!myEnd.isFixed()) {
             myEnd.shiftCenter(-myLengthIncrement, myAngle);
         }
     }
