@@ -7,7 +7,7 @@ GOAL: Extend program's functionality without jeopardizing code flexibility
 ADDED FUNCTIONALITY: 
 - Fixed mass. Implemented via boolean isFixed field
 - Bar. Implemented via forceLengthToNatural() method, which shifts spring's 
-  masses along bar axis to set distance between them equal to bar's initial length.
+  masses along bar axis to set distance between masses equal to bar's initial length.
   We found this implementation to be design-wise superior over hardcoding large 
   myK and introducing damping factor for several reasons:
   - Produced animation is much smoother.
