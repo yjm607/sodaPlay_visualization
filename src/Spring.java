@@ -8,11 +8,11 @@ import java.awt.geom.Point2D;
  * @author Robert C. Duvall, edited by Jei Yoo & Volodymyr Zavidovych
  */
 public class Spring {
-    protected Mass myStart;
-    protected Mass myEnd;
-    protected double myLength;
-    protected double myK;
-    protected boolean isFixed;
+    private Mass myStart;
+    private Mass myEnd;
+    private double myLength;
+    private double myK;
+    private boolean isFixed;
 
     public Spring (Mass start, Mass end, double length, double kVal) {
         myStart = start;
@@ -69,7 +69,7 @@ public class Spring {
         }
     }
 
-    protected void forceLengthToNatural () {
+    public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
         double myAngle = Math.toRadians(Force.angleBetween(dx, dy));
@@ -83,11 +83,15 @@ public class Spring {
         }
     }
 
-    protected double getXLengthComponent () {
+    public double getXLengthComponent () {
         return myStart.getCenter().getX() - myEnd.getCenter().getX();
     }
 
-    protected double getYLengthComponent () {
+    public double getYLengthComponent () {
         return myStart.getCenter().getY() - myEnd.getCenter().getY();
+    }
+    
+    public void setLength(double newLength) {
+        myLength = newLength;
     }
 }

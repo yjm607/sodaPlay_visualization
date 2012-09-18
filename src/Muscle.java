@@ -22,8 +22,9 @@ public class Muscle extends Spring {
 
     @Override
     public void update (Simulation canvas, double dt) {
-        myLength = myInitialLength + myAmplitude
+        double newNaturalLength = myInitialLength + myAmplitude
                 * Math.sin(myFrequency * myMuscleAge);
+        setLength(newNaturalLength);
         forceLengthToNatural();
         myMuscleAge += dt;
     }
