@@ -160,6 +160,13 @@ public class Mass {
     public int getBottom () {
         return (int) (getCenter().getY() + getSize().height / 2);
     }
+    
+    /**
+     * Reports fixed-ess state.
+     */
+    public boolean isFixed () {
+        return isFixed;
+    }
 
     /**
      * Returns shape's size.
