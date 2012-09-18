@@ -1,0 +1,24 @@
+AUTHORS: Jei Yoo, Volodymyr Zavidovych. Based on code by Robert Duvall
+##############
+PURPOSE: Duke CPS308 Fall 2012 Springie Assignment 2
+##############
+GOAL: Extend program's functionality without jeopardizing code flexibility
+##############
+ADDED FUNCTIONALITY: 
+- Fixed mass. Implemented via boolean isFixed field
+- Bar. Implemented via forceLengthToNatural() method, which shifts spring's 
+  masses along bar axis to set distance between them equal to bar's initial length.
+  We found this implementation to be design-wise superior over hardcoding large 
+  myK and introducing damping factor for several reasons:
+  - Produced animation is much smoother.
+  - Very little code was written to implement it. 
+  - Code would use functions already present in Mass class.
+  - We could reuse functionality to implement Muscle (see next).
+- Muscle. Is a bar with variable myLength. Inherits Spring class. Changes the natural
+  length periodically within the amplitude. Then uses inherited forceLengthToNatural() 
+  to move masses.
+##############
+KNOWN ISSUES: None
+  
+  
+
