@@ -90,7 +90,7 @@ public class Spring {
     public double getYLengthComponent () {
         return myStart.getCenter().getY() - myEnd.getCenter().getY();
     }
-    
+
     public void setLength(double newLength) {
         myLength = newLength;
     }
