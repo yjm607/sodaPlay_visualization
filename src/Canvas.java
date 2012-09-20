@@ -25,6 +25,8 @@ public class Canvas extends JComponent {
     // animate 25 times per second if possible (in milliseconds)
     public static final int ONE_SECOND = 1000;
     public static final int FRAMES_PER_SECOND = 25;
+    // default muscle oscillation period
+    public static final double MUSCLE_OSCILLATION_PERIOD = 1.5;
 
     // user's game to be animated
     private Simulation myTarget;

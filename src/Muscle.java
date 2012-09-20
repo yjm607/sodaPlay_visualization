@@ -1,6 +1,8 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 
 /**
- * 
  * @author Jei Yoo & Volodymyr Zavidovych
  */
 public class Muscle extends Spring {
@@ -16,16 +18,30 @@ public class Muscle extends Spring {
         myAmplitude = amplitude;
         myInitialLength = length;
         myMuscleAge = 0;
-        // could extend input to vary frequency for each muscle
-        myFrequency = 1.5;
+        myFrequency = Canvas.MUSCLE_OSCILLATION_PERIOD;
     }
 
     @Override
     public void update (Simulation canvas, double dt) {
+        updateMuscleNaturalLength();
+        forceLengthToNatural();
+        myMuscleAge += dt;
+    }
+
+    public void updateMuscleNaturalLength() {
         double newNaturalLength = myInitialLength + myAmplitude
                 * Math.sin(myFrequency * myMuscleAge);
         setLength(newNaturalLength);
-        forceLengthToNatural();
-        myMuscleAge += dt;
+    }
+    
+    @Override
+    public void chooseLineStyle(Graphics2D pen) {
+        double len = getDistanceBetweenEnds() - myInitialLength;
+        if (len < 0.0) {
+            pen.setColor(Color.BLUE);
+        }
+        else {
+            pen.setColor(Color.RED);
+        }
     }
 }

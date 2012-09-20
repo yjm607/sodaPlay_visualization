@@ -48,7 +48,13 @@ public class Factory {
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
-        return new Spring(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+        if (ks >= 0) {
+            return new Spring(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+        }
+        else {
+            return new Bar(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+        }
+        
     }
 
     private Spring muscleCommand (Scanner line, Simulation sim) {
