@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import javax.swing.JFrame;
+import mechanics.Canvas;
 
 
 /**
