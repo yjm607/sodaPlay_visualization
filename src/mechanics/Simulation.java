@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import drawings.Drawable;
-
+import drawings.Mass;
 
 /**
  * Simulates objects moving around in a bounded environment.
@@ -15,6 +15,8 @@ public class Simulation {
     private List<Drawable> myDrawings;
     private Canvas myContainer;
     private Force myGravity;
+    private double myViscosity;
+
 
     /**
      * Create a Canvas with the given size.
@@ -31,6 +33,11 @@ public class Simulation {
     public void add (Force gravity) {
         myGravity = gravity;
     }
+    
+    public void add (double viscosity) {
+        myViscosity = viscosity;
+    }
+    
     /**
      * Paint all shapes on the canvas.
      * else 
@@ -74,5 +81,12 @@ public class Simulation {
 
     public Force getGravity(double mass) {
         return myGravity;
+    }
+    
+    public Force getViscosity(Mass mass) {
+        Force velocity = new Force(mass.getVelocity());
+        velocity.negate();
+        Force result = new Force(velocity.getDirection(), velocity.getMagnitude() * myViscosity);
+        return result;
     }
 }

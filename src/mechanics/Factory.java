@@ -33,6 +33,9 @@ public class Factory {
                     else if (type.equals("gravity")) {
                         sim.add(gravityCommand(line));
                     }
+                    else if (type.equals("viscosity")) {
+                        sim.add(line.nextDouble());
+                    }
                 }
             }
             input.close();

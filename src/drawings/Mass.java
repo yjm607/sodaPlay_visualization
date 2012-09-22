@@ -44,8 +44,7 @@ public class Mass implements Drawable {
 
     public void update (Simulation canvas, double dt) {
         applyForce(canvas.getGravity(myMass));
-        //applyForce(getGravity());
-        //applyForce(canvas.getViscosity(this));
+        applyForce(canvas.getViscosity(this));
         //applyForce(canvas.getCenterMass(this));
         applyForce(getBounce(canvas.getSize()));
         // convert force back into Mover's velocity
