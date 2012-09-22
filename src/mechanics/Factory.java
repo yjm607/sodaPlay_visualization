@@ -30,6 +30,9 @@ public class Factory {
                     else if (type.equals("muscle")) {
                         sim.add(muscleCommand(line, sim));
                     }
+                    else if (type.equals("gravity")) {
+                        sim.add(gravityCommand(line));
+                    }
                 }
             }
             input.close();
@@ -61,7 +64,7 @@ public class Factory {
         }
         
     }
-
+    
     private Spring muscleCommand (Scanner line, Simulation sim) {
         int m1 = line.nextInt();
         int m2 = line.nextInt();
@@ -70,5 +73,11 @@ public class Factory {
         double amplitude = line.nextDouble();
         return new Muscle((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks,
                 amplitude);
+    }
+    
+    private Force gravityCommand (Scanner line) {
+        double angle = line.nextDouble();
+        double magnitude = line.nextDouble();
+        return new Force(angle, magnitude);
     }
 }

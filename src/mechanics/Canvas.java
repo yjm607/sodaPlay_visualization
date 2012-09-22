@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 
@@ -148,6 +149,11 @@ public class Canvas extends JComponent {
 
     private void loadModel () {
         final Factory factory = new Factory();
+        readInput(factory, "Select data file for masses/springs/bars/muscles.");
+        readInput(factory, "Select data file for environemnt.");
+    }
+
+    private void readInput (final Factory factory, String prompt) {
         int response = ourChooser.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
             factory.loadModel(myTarget, ourChooser.getSelectedFile());

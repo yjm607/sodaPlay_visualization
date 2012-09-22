@@ -14,6 +14,7 @@ import drawings.Drawable;
 public class Simulation {
     private List<Drawable> myDrawings;
     private Canvas myContainer;
+    private Force myGravity;
 
     /**
      * Create a Canvas with the given size.
@@ -27,6 +28,9 @@ public class Simulation {
         myDrawings.add(drawing);
     }
     
+    public void add (Force gravity) {
+        myGravity = gravity;
+    }
     /**
      * Paint all shapes on the canvas.
      * else 
@@ -66,5 +70,9 @@ public class Simulation {
             if (d.match(id)) return d;
         }
         return null;
+    }
+
+    public Force getGravity(double mass) {
+        return myGravity;
     }
 }
