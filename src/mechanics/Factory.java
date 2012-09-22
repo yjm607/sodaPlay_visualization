@@ -54,10 +54,10 @@ public class Factory {
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         if (ks >= 0) {
-            return new Spring(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+            return new Spring((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks);
         }
         else {
-            return new Bar(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+            return new Bar((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks);
         }
         
     }
@@ -68,7 +68,7 @@ public class Factory {
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         double amplitude = line.nextDouble();
-        return new Muscle(sim.getMass(m1), sim.getMass(m2), restLength, ks,
+        return new Muscle((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks,
                 amplitude);
     }
 }

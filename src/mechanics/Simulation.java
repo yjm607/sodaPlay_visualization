@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import drawings.Drawable;
-import drawings.Mass;
 
 
 /**
@@ -13,7 +12,6 @@ import drawings.Mass;
  * @author Robert C. Duvall
  */
 public class Simulation {
-    private List<Mass> myMasses;
     private List<Drawable> myDrawings;
     private Canvas myContainer;
 
@@ -21,7 +19,6 @@ public class Simulation {
      * Create a Canvas with the given size.
      */
     public Simulation (Canvas container) {
-        myMasses = new ArrayList<Mass>();
         myDrawings = new ArrayList<Drawable>();
         myContainer = container;
     }
@@ -30,11 +27,6 @@ public class Simulation {
         myDrawings.add(drawing);
     }
     
-    public void add (Mass mass) {
-        myMasses.add(mass);
-        myDrawings.add(mass);
-    }
-
     /**
      * Paint all shapes on the canvas.
      * else 
@@ -69,9 +61,9 @@ public class Simulation {
         return myContainer.getSize();
     }
 
-    public Mass getMass (int id) {
-        for (Mass m : myMasses) {
-            if (m.match(id)) return m;
+    public Drawable getDrawable (int id) {
+        for (Drawable d : myDrawings) {
+            if (d.match(id)) return d;
         }
         return null;
     }

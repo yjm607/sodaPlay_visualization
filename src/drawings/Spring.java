@@ -44,6 +44,10 @@ public class Spring implements Drawable {
         myEnd.applyForce(f);
     }
 
+    public boolean match(int id) {
+        return false;
+    }
+    
     public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
