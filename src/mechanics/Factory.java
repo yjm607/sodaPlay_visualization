@@ -18,38 +18,86 @@ public class Factory {
     public void loadModel (Simulation sim, File modelFile) {
         try {
             Scanner input = new Scanner(modelFile);
-            while (input.hasNext()) {
-                Scanner line = new Scanner(input.nextLine());
-                if (line.hasNext()) {
-                    String type = line.next();
-                    if (type.equals("mass")) {
-                        sim.add(massCommand(line));
-                    }
-                    else if (type.equals("spring")) {
-                        sim.add(springCommand(line, sim));
-                    }
-                    else if (type.equals("muscle")) {
-                        sim.add(muscleCommand(line, sim));
-                    }
-                    else if (type.equals("gravity")) {
-                        sim.add(line, type);
-                    }
-                    else if (type.equals("viscosity")) {
-                        sim.add(line, type);
-                    }
-                    else if (type.equals("centermass")) {
-                        sim.add(line, type);
-                    }
-                    else if (type.equals("wall")) {
-                        sim.add(line, type);
-                    }
-                }
+            if (modelFile.getName().equals("environment.xsp")) {
+                loadEnvironment(sim, input);
             }
+            else {
+                loadAssembly(sim, input);
+            }
+//            while (input.hasNext()) {
+//                Scanner line = new Scanner(input.nextLine());
+//                if (line.hasNext()) {
+//                    String type = line.next();
+//                    if (type.equals("mass")) {
+//                        sim.add(massCommand(line));
+//                    }
+//                    else if (type.equals("spring")) {
+//                        sim.add(springCommand(line, sim));
+//                    }
+//                    else if (type.equals("muscle")) {
+//                        sim.add(muscleCommand(line, sim));
+//                    }
+//                    else if (type.equals("gravity")) {
+//                        sim.add(line, type);
+//                    }
+//                    else if (type.equals("viscosity")) {
+//                        sim.add(line, type);
+//                    }
+//                    else if (type.equals("centermass")) {
+//                        sim.add(line, type);
+//                    }
+//                    else if (type.equals("wall")) {
+//                        sim.add(line, type);
+//                    }
+//                }
+//            }
             input.close();
         }
         catch (FileNotFoundException e) {
             // should not happen because File came from user selection
             e.printStackTrace();
+        }
+    }
+
+    private void loadAssembly (Simulation sim, Scanner input) {
+        Assembly assembly = new Assembly(sim);
+        while (input.hasNext()) {
+            Scanner line = new Scanner(input.nextLine());
+            if (line.hasNext()) {
+                String type = line.next();
+                if (type.equals("mass")) {
+                    assembly.add(massCommand(line));
+                }
+                else if (type.equals("spring")) {
+                    assembly.add(springCommand(line, assembly));
+                }
+                else if (type.equals("muscle")) {
+                    assembly.add(muscleCommand(line, assembly));
+                }
+            }
+        }
+        sim.add(assembly);
+    }
+
+    private void loadEnvironment (Simulation sim, Scanner input) {
+        while (input.hasNext()) {
+            Scanner line = new Scanner(input.nextLine());
+            if (line.hasNext()) {
+                String type = line.next();
+                sim.getEnvironment().add(line, type);
+                // if (type.equals("gravity")) {
+                // sim.getEnvironment().add(line, type);
+                // }
+                // else if (type.equals("viscosity")) {
+                // sim.add(line, type);
+                // }
+                // else if (type.equals("centermass")) {
+                // sim.add(line, type);
+                // }
+                // else if (type.equals("wall")) {
+                // sim.add(line, type);
+                // }
+            }
         }
     }
 
@@ -61,26 +109,26 @@ public class Factory {
         return new Mass(id, x, y, mass);
     }
 
-    private Spring springCommand (Scanner line, Simulation sim) {
+    private Spring springCommand (Scanner line, Assembly assembly) {
         int m1 = line.nextInt();
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         if (ks >= 0)
-            return new Spring((Mass) sim.getDrawable(m1),
-                    (Mass) sim.getDrawable(m2), restLength, ks);
-        else return new Bar((Mass) sim.getDrawable(m1),
-                (Mass) sim.getDrawable(m2), restLength, ks);
+            return new Spring((Mass) assembly.getDrawable(m1),
+                    (Mass) assembly.getDrawable(m2), restLength, ks);
+        else return new Bar((Mass) assembly.getDrawable(m1),
+                (Mass) assembly.getDrawable(m2), restLength, ks);
 
     }
 
-    private Spring muscleCommand (Scanner line, Simulation sim) {
+    private Spring muscleCommand (Scanner line, Assembly assembly) {
         int m1 = line.nextInt();
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         double amplitude = line.nextDouble();
-        return new Muscle((Mass) sim.getDrawable(m1),
-                (Mass) sim.getDrawable(m2), restLength, ks, amplitude);
+        return new Muscle((Mass) assembly.getDrawable(m1),
+                (Mass) assembly.getDrawable(m2), restLength, ks, amplitude);
     }
 }

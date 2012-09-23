@@ -13,7 +13,6 @@ public class Environment {
 
     private Canvas myContainer;
     private ArrayList<Force> myForceList = new ArrayList<Force>();
-    private List<Drawable> myDrawings = new ArrayList<Drawable>();
     private Force myGravityForce;
     private Force myViscosityForce;
     private Force myCenterMassForce;
@@ -24,17 +23,17 @@ public class Environment {
     private double myViscosity;
     private double myCenterMassForceMagnitude;
     private double myCenterMassExponent;
-    private HashMap<Force, Double> myWallForces = new HashMap<Force, Double>();
+    private HashMap<Force, Double> myWallForces;
     
 
-    public Environment (Simulation sim, Canvas container) {
+    public Environment (Canvas container) {
         myContainer = container;
         myGravityAngle = 0;
         myGravityMagnitude = 0;
         myViscosity = 0;
         myCenterMassForceMagnitude = 0;
         myCenterMassExponent = 0;
-        myDrawings = sim.getMyDrawings();
+        myWallForces = new HashMap<Force, Double>();
     }
 
     public void add (Scanner line, String type) {
@@ -66,8 +65,8 @@ public class Environment {
 
     }
 
-    public Force getAllForces (Mass mass) {
-        resetAllForces(mass);
+    public Force getAllForces (Mass mass, Assembly assembly) {
+        resetAllForces(mass, assembly);
         Force totalEnvironmentForce = new Force();
         for (Force f : myForceList) {
             totalEnvironmentForce.sum(f);
@@ -75,11 +74,11 @@ public class Environment {
         return totalEnvironmentForce;
     }
 
-    private void resetAllForces (Mass mass) {
+    private void resetAllForces (Mass mass, Assembly assembly) {
         myForceList.clear();
         setGravity(mass, myGravityAngle, myGravityMagnitude);
         setViscosity(myViscosity, mass);
-        setCenterMassForce(mass);
+        setCenterMassForce(mass, assembly);
         setWallForce(mass);
     }
 
@@ -97,11 +96,11 @@ public class Environment {
         myForceList.add(myViscosityForce);
     }
 
-    private void setCenterMassForce (Mass mass) {
+    private void setCenterMassForce (Mass mass, Assembly assembly) {
         double xCenter = 0;
         double yCenter = 0;
         double totalMass = 0;
-        for (Drawable d : myDrawings) {
+        for (Drawable d : assembly.getMyDrawings()) {
             if (d.getClassName().equals("mass")) {
                 xCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getX();
                 yCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getY();
@@ -121,11 +120,9 @@ public class Environment {
 
     private void setWallForce (Mass mass) {
         myTotalWallForce = new Force();
-        myWallForces.size();
         for (Map.Entry<Force, Double> entry : myWallForces.entrySet()) {
             Force oneWallForce = new Force(entry.getKey());
-            //System.out.println(myWallForces.size() + " " + mass.getMass() + " "+oneWallForce.getMagnitude() + " " + oneWallForce.getDirection());
-            Double exponent = entry.getValue();
+            double exponent = entry.getValue();
             double distance = 0;
             switch ((int)oneWallForce.getDirection()) {
                 case 90: 
@@ -147,7 +144,6 @@ public class Environment {
                     break;
             }
             oneWallForce.scale(1 / Math.pow(distance, exponent));
-            //System.out.println(mass.getMass() + " "+oneWallForce.getMagnitude() + " " + oneWallForce.getDirection());
             myTotalWallForce.sum(oneWallForce);
         }
         myForceList.add(myTotalWallForce);

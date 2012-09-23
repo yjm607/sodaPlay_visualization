@@ -2,6 +2,7 @@ package drawings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import mechanics.Assembly;
 import mechanics.Force;
 import mechanics.Simulation;
 
@@ -33,7 +34,7 @@ public class Spring implements Drawable {
         pen.drawLine(xStart, yStart, xEnd, yEnd);
     }
 
-    public void update (Simulation canvas, double dt) {
+    public void update (Simulation canvas, Assembly assembly, double dt) {
         // apply hooke's law to each attached mass
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();

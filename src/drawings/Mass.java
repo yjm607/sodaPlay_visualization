@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import mechanics.Assembly;
 import mechanics.Force;
 import mechanics.Simulation;
 
@@ -42,8 +43,8 @@ public class Mass implements Drawable {
         pen.fillOval(getLeft(), getTop(), getSize().width, getSize().height);
     }
 
-    public void update (Simulation canvas, double dt) {
-        applyForce(canvas.getEnvironment().getAllForces(this));
+    public void update (Simulation canvas, Assembly assembly, double dt) {
+        applyForce(canvas.getEnvironment().getAllForces(this, assembly));
         // convert force back into Mover's velocity
         myAcceleration.scale(1.0 / myMass);
         getVelocity().sum(myAcceleration);

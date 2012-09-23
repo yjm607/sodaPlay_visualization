@@ -1,6 +1,7 @@
 package drawings;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import mechanics.Assembly;
 import mechanics.Canvas;
 import mechanics.Simulation;
 
@@ -25,7 +26,7 @@ public class Muscle extends Spring {
     }
 
     @Override
-    public void update (Simulation canvas, double dt) {
+    public void update (Simulation canvas, Assembly assembly, double dt) {
         updateMuscleNaturalLength();
         forceLengthToNatural();
         myMuscleAge += dt;

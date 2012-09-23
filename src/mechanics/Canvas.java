@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import drawings.Drawable;
+import drawings.Mass;
 
 
 /**
@@ -180,14 +181,27 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_P:
                 System.out.println(myTarget);
                 break;
+                
             default:
                 // good style
                 break;
         }
     }
     
-    private void manageMouseDragging(Point point) {
-        List<Drawable> myDrawings = myTarget.getMyDrawings();
-        
-    }
+
+    private void manageMouseDragging (Point point) {
+//          List<Drawable> myDrawings = myTarget.getMyAssemblies();
+//          Mass nearestMass = null;
+//          double minDistance = getSize().getHeight();
+//          for (Drawable d : myDrawings) {
+//              if (d.getClassName().equals("mass")) {
+//                  double distance = Force.distanceBetween(point,
+//                          ((Mass) d).getCenter());
+//                  if (distance < minDistance) {
+//                      nearestMass = (Mass) d;
+//                      minDistance = distance;
+//                  }
+//              }
+//          }
+      }
 }
