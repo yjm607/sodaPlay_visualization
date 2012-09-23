@@ -16,10 +16,6 @@ import drawings.Mass;
 public class Simulation {
     private List<Drawable> myDrawings;
     private Canvas myContainer;
-    private Force myGravity;
-    private double myViscosity;
-    private double myCenterMassForce;
-    private double myCenterMassExponent;
     private Environment myEnvironment;
 
 
@@ -29,30 +25,15 @@ public class Simulation {
     public Simulation (Canvas container) {
         myDrawings = new ArrayList<Drawable>();
         myContainer = container;
-        myEnvironment = new Environment();
+        myEnvironment = new Environment(this, container);
     }
 
-    public void addEnvironmentForce(Scanner line, String type) {
+    public void add(Scanner line, String type) {
         myEnvironment.add(line, type);
     }
     
     public void add (Drawable drawing) {
         myDrawings.add(drawing);
-    }
-    
-    public void add (Force gravity) {
-        myGravity = gravity;
-    }
-    
-    public void add (double viscosity) {
-        myViscosity = viscosity;
-    }
-    
-    public void add (double [] data, String type ) {
-        if (type.equals("centermass")) {
-            myCenterMassForce = data[0];
-            myCenterMassExponent = data[1];
-        }
     }
     
     /**
@@ -100,14 +81,7 @@ public class Simulation {
         return myEnvironment;
     }
     
-    public List<Drawable> getmyDrawings() {
+    public List<Drawable> getMyDrawings() {
         return myDrawings;
-    }
-    
-    public void passDrawingsInfoToEnvironment() {
-        for (Drawable d : myDrawings) {
-            myEnvironment.addDrawing(d);
-        }
-    }
-    
+    }    
 }

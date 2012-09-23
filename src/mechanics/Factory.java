@@ -32,17 +32,19 @@ public class Factory {
                         sim.add(muscleCommand(line, sim));
                     }
                     else if (type.equals("gravity")) {
-                        sim.addEnvironmentForce(line, type);
+                        sim.add(line, type);
                     }
                     else if (type.equals("viscosity")) {
-                        sim.addEnvironmentForce(line, type);
+                        sim.add(line, type);
                     }
                     else if (type.equals("centermass")) {
-                        sim.addEnvironmentForce(line, type);
+                        sim.add(line, type);
+                    }
+                    else if (type.equals("wall")) {
+                        sim.add(line, type);
                     }
                 }
             }
-            sim.passDrawingsInfoToEnvironment();
             input.close();
         }
         catch (FileNotFoundException e) {

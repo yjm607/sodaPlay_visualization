@@ -1,6 +1,9 @@
 package mechanics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import drawings.Drawable;
 import drawings.Mass;
@@ -8,29 +11,30 @@ import drawings.Mass;
 
 public class Environment {
 
+    private Canvas myContainer;
     private ArrayList<Force> myForceList = new ArrayList<Force>();
-    private ArrayList<Drawable> myDrawings = new ArrayList<Drawable>();
+    private List<Drawable> myDrawings = new ArrayList<Drawable>();
     private Force myGravityForce;
     private Force myViscosityForce;
     private Force myCenterMassForce;
-    private Force myWallForce;
+    private Force myTotalWallForce;
 
     private double myGravityAngle;
     private double myGravityMagnitude;
     private double myViscosity;
     private double myCenterMassForceMagnitude;
     private double myCenterMassExponent;
+    private HashMap<Force, Double> myWallForces = new HashMap<Force, Double>();
+    
 
-    public Environment () {
+    public Environment (Simulation sim, Canvas container) {
+        myContainer = container;
         myGravityAngle = 0;
         myGravityMagnitude = 0;
         myViscosity = 0;
         myCenterMassForceMagnitude = 0;
         myCenterMassExponent = 0;
-    }
-
-    public void addDrawing (Drawable d) {
-        myDrawings.add(d);
+        myDrawings = sim.getMyDrawings();
     }
 
     public void add (Scanner line, String type) {
@@ -46,7 +50,18 @@ public class Environment {
             myCenterMassExponent = line.nextDouble();
         }
         else if (type.equals("wall")) {
-            setWallForce(line);
+            HashMap<Force, Double> result = new HashMap<Force, Double>();
+            int id = line.nextInt();
+            double magnitude = line.nextDouble();
+            double exponent = line.nextDouble();
+            Force force = new Force();
+            switch (id) {
+                case 1: force =  new Force(90, magnitude); break;
+                case 2: force =  new Force(180, magnitude); break;
+                case 3: force =  new Force(270, magnitude); break;
+                case 4: force =  new Force(0, magnitude); break;
+            }
+            myWallForces.put(force,exponent);
         }
 
     }
@@ -65,6 +80,7 @@ public class Environment {
         setGravity(mass, myGravityAngle, myGravityMagnitude);
         setViscosity(myViscosity, mass);
         setCenterMassForce(mass);
+        setWallForce(mass);
     }
 
     private void setGravity (Mass mass, double angle, double magnitude) {
@@ -103,8 +119,38 @@ public class Environment {
         myForceList.add(myCenterMassForce);
     }
 
-    private void setWallForce (Scanner line) {
-        myForceList.add(myWallForce);
+    private void setWallForce (Mass mass) {
+        myTotalWallForce = new Force();
+        myWallForces.size();
+        for (Map.Entry<Force, Double> entry : myWallForces.entrySet()) {
+            Force oneWallForce = new Force(entry.getKey());
+            //System.out.println(myWallForces.size() + " " + mass.getMass() + " "+oneWallForce.getMagnitude() + " " + oneWallForce.getDirection());
+            Double exponent = entry.getValue();
+            double distance = 0;
+            switch ((int)oneWallForce.getDirection()) {
+                case 90: 
+                    distance = mass.getCenter().getY() 
+                        / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER; 
+                    break;
+                case 180: 
+                    distance = (myContainer.getSize().width - mass.getCenter().getX()) 
+                        / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER; 
+                    break;
+                case 270: 
+                    distance = (myContainer.getSize().height - mass.getCenter().getY())
+                    / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER; 
+                    break;
+                    
+                case 0: 
+                    distance = mass.getCenter().getX()
+                    / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER; 
+                    break;
+            }
+            oneWallForce.scale(1 / Math.pow(distance, exponent));
+            //System.out.println(mass.getMass() + " "+oneWallForce.getMagnitude() + " " + oneWallForce.getDirection());
+            myTotalWallForce.sum(oneWallForce);
+        }
+        myForceList.add(myTotalWallForce);
     }
 
 }

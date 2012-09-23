@@ -187,7 +187,7 @@ public class Canvas extends JComponent {
     }
     
     private void manageMouseDragging(Point point) {
-        List<Drawable> myDrawings = myTarget.getmyDrawings();
+        List<Drawable> myDrawings = myTarget.getMyDrawings();
         
     }
 }

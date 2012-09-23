@@ -1,3 +1,6 @@
-gravity 90 1
+gravity 270 1
 viscosity 0.01
 centermass 1 0
+wall 1 15 2
+wall 2 5 0
+wall 4 3 0
