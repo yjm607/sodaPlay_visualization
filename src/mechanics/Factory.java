@@ -36,6 +36,9 @@ public class Factory {
                     else if (type.equals("viscosity")) {
                         sim.add(line.nextDouble());
                     }
+                    else if (type.equals("centermass")) {
+                        sim.add(centerMassCommand(line), "centermass");
+                    }
                 }
             }
             input.close();
@@ -82,5 +85,12 @@ public class Factory {
         double angle = line.nextDouble();
         double magnitude = line.nextDouble();
         return new Force(angle, magnitude);
+    }
+    
+    private double[] centerMassCommand (Scanner line) {
+        double [] result = new double[2];
+        result[0] = line.nextDouble();
+        result[1] = line.nextDouble();
+        return result;
     }
 }

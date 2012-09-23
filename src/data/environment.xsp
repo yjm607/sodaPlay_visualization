@@ -1,2 +1,3 @@
 gravity 90 1
 viscosity 0.01
+centermass 1 0

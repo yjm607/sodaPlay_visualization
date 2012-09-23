@@ -1,6 +1,7 @@
 package mechanics;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import drawings.Drawable;
@@ -16,6 +17,8 @@ public class Simulation {
     private Canvas myContainer;
     private Force myGravity;
     private double myViscosity;
+    private double myCenterMassForce;
+    private double myCenterMassExponent;
 
 
     /**
@@ -36,6 +39,13 @@ public class Simulation {
     
     public void add (double viscosity) {
         myViscosity = viscosity;
+    }
+    
+    public void add (double [] data, String type ) {
+        if (type.equals("centermass")) {
+            myCenterMassForce = data[0];
+            myCenterMassExponent = data[1];
+        }
     }
     
     /**
@@ -90,5 +100,25 @@ public class Simulation {
         velocity.negate();
         Force result = new Force(velocity.getDirection(), velocity.getMagnitude() * myViscosity);
         return result;
+    }
+    
+    public Force getCenterMass(Mass mass) {
+        double xCenter = 0;
+        double yCenter = 0;
+        double totalMass = 0;
+        for (Drawable d : myDrawings) {
+            if(d.getClass().toString().equals("class drawings.Mass")) {
+                xCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getX();
+                yCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getY();
+                totalMass += ((Mass) d).getMass();
+            }
+        }
+        double dx = xCenter / totalMass - mass.getCenter().getX();
+        double dy = yCenter / totalMass - mass.getCenter().getY();
+        double angle = Force.angleBetween(dx, dy);
+        double distance = Force.distanceBetween(dx, dy)
+                / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER ;
+        double magnitude = myCenterMassForce / Math.pow(distance,myCenterMassExponent);
+        return new Force(angle, magnitude);
     }
 }

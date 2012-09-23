@@ -45,7 +45,7 @@ public class Mass implements Drawable {
     public void update (Simulation canvas, double dt) {
         applyForce(canvas.getGravity(myMass));
         applyForce(canvas.getViscosity(this));
-        //applyForce(canvas.getCenterMass(this));
+        applyForce(canvas.getCenterMass(this));
         // convert force back into Mover's velocity
         myAcceleration.scale(1.0 / myMass);
         getVelocity().sum(myAcceleration);
@@ -69,13 +69,6 @@ public class Mass implements Drawable {
     public boolean match (int id) {
         return myID == id;
     }
-
-    // add gravity towards bottom
-    /*private Force getGravity() {
-        Force result = new Force(90, 1);
-        System.out.println(result.getMagnitude() + " " + result.getDirection());
-        return result;
-    }*/
 
     // check for move out of bounds
     private void getBounce (Dimension bounds) {

@@ -29,6 +29,7 @@ public class Canvas extends JComponent {
     public static final int FRAMES_PER_SECOND = 25;
     // default muscle oscillation period
     public static final double MUSCLE_OSCILLATION_PERIOD = 1.5;
+    public static final double CENTER_MASS_FORCE_DISTANCE_DIVIDER = 15;
 
     // user's game to be animated
     private Simulation myTarget;
