@@ -1,4 +1,5 @@
 package mechanics;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -31,16 +32,17 @@ public class Factory {
                         sim.add(muscleCommand(line, sim));
                     }
                     else if (type.equals("gravity")) {
-                        sim.add(gravityCommand(line));
+                        sim.addEnvironmentForce(line, type);
                     }
                     else if (type.equals("viscosity")) {
-                        sim.add(line.nextDouble());
+                        sim.addEnvironmentForce(line, type);
                     }
                     else if (type.equals("centermass")) {
-                        sim.add(centerMassCommand(line), "centermass");
+                        sim.addEnvironmentForce(line, type);
                     }
                 }
             }
+            sim.passDrawingsInfoToEnvironment();
             input.close();
         }
         catch (FileNotFoundException e) {
@@ -62,35 +64,21 @@ public class Factory {
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
-        if (ks >= 0) {
-            return new Spring((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks);
-        }
-        else {
-            return new Bar((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks);
-        }
-        
+        if (ks >= 0)
+            return new Spring((Mass) sim.getDrawable(m1),
+                    (Mass) sim.getDrawable(m2), restLength, ks);
+        else return new Bar((Mass) sim.getDrawable(m1),
+                (Mass) sim.getDrawable(m2), restLength, ks);
+
     }
-    
+
     private Spring muscleCommand (Scanner line, Simulation sim) {
         int m1 = line.nextInt();
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         double amplitude = line.nextDouble();
-        return new Muscle((Mass) sim.getDrawable(m1), (Mass) sim.getDrawable(m2), restLength, ks,
-                amplitude);
-    }
-    
-    private Force gravityCommand (Scanner line) {
-        double angle = line.nextDouble();
-        double magnitude = line.nextDouble();
-        return new Force(angle, magnitude);
-    }
-    
-    private double[] centerMassCommand (Scanner line) {
-        double [] result = new double[2];
-        result[0] = line.nextDouble();
-        result[1] = line.nextDouble();
-        return result;
+        return new Muscle((Mass) sim.getDrawable(m1),
+                (Mass) sim.getDrawable(m2), restLength, ks, amplitude);
     }
 }

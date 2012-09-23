@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import drawings.Drawable;
 import drawings.Mass;
 
@@ -19,6 +20,7 @@ public class Simulation {
     private double myViscosity;
     private double myCenterMassForce;
     private double myCenterMassExponent;
+    private Environment myEnvironment;
 
 
     /**
@@ -27,8 +29,13 @@ public class Simulation {
     public Simulation (Canvas container) {
         myDrawings = new ArrayList<Drawable>();
         myContainer = container;
+        myEnvironment = new Environment();
     }
 
+    public void addEnvironmentForce(Scanner line, String type) {
+        myEnvironment.add(line, type);
+    }
+    
     public void add (Drawable drawing) {
         myDrawings.add(drawing);
     }
@@ -89,36 +96,14 @@ public class Simulation {
         return null;
     }
 
-    public Force getGravity(double mass) {
-        Force result = new Force(myGravity);
-        result.scale(mass);
-        return result;
+    public Environment getEnvironment() {
+        return myEnvironment;
     }
     
-    public Force getViscosity(Mass mass) {
-        Force velocity = new Force(mass.getVelocity());
-        velocity.negate();
-        Force result = new Force(velocity.getDirection(), velocity.getMagnitude() * myViscosity);
-        return result;
-    }
-    
-    public Force getCenterMass(Mass mass) {
-        double xCenter = 0;
-        double yCenter = 0;
-        double totalMass = 0;
+    public void passDrawingsInfoToEnvironment() {
         for (Drawable d : myDrawings) {
-            if(d.getClass().toString().equals("class drawings.Mass")) {
-                xCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getX();
-                yCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getY();
-                totalMass += ((Mass) d).getMass();
-            }
+            myEnvironment.addDrawing(d);
         }
-        double dx = xCenter / totalMass - mass.getCenter().getX();
-        double dy = yCenter / totalMass - mass.getCenter().getY();
-        double angle = Force.angleBetween(dx, dy);
-        double distance = Force.distanceBetween(dx, dy)
-                / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER ;
-        double magnitude = myCenterMassForce / Math.pow(distance,myCenterMassExponent);
-        return new Force(angle, magnitude);
     }
+    
 }
