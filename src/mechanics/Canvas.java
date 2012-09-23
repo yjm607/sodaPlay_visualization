@@ -10,10 +10,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.Timer;
+import drawings.Drawable;
 
 
 /**
@@ -142,8 +144,9 @@ public class Canvas extends JComponent {
         myLastMousePosition = new Point();
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void mouseMoved (MouseEvent e) {
+            public void mouseDragged (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
+                manageMouseDragging(myLastMousePosition);
             }
         });
     }
@@ -181,5 +184,10 @@ public class Canvas extends JComponent {
                 // good style
                 break;
         }
+    }
+    
+    private void manageMouseDragging(Point point) {
+        List<Drawable> myDrawings = myTarget.getmyDrawings();
+        
     }
 }

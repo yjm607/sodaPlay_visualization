@@ -48,6 +48,10 @@ public class Spring implements Drawable {
         return false;
     }
     
+    public String getClassName() {
+        return "string";
+    }
+    
     public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();

@@ -20,4 +20,9 @@ public class Bar extends Spring {
     public void chooseLineStyle(Graphics2D pen) {
         pen.setColor(Color.BLACK);
     }
+    
+    @Override
+    public String getClassName() {
+        return "bar";
+    }
 }

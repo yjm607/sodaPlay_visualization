@@ -38,6 +38,11 @@ public class Muscle extends Spring {
     }
     
     @Override
+    public String getClassName() {
+        return "muscle";
+    }
+    
+    @Override
     public void chooseLineStyle(Graphics2D pen) {
         double len = getDistanceBetweenEnds() - myInitialLength;
         if (len < 0.0) {

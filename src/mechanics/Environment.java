@@ -86,7 +86,7 @@ public class Environment {
         double yCenter = 0;
         double totalMass = 0;
         for (Drawable d : myDrawings) {
-            if (d.getClass().toString().equals("class drawings.Mass")) {
+            if (d.getClassName().equals("mass")) {
                 xCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getX();
                 yCenter += ((Mass) d).getMass() * ((Mass) d).getCenter().getY();
                 totalMass += ((Mass) d).getMass();

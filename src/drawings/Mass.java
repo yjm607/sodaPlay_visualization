@@ -64,6 +64,10 @@ public class Mass implements Drawable {
         myAcceleration.sum(f);
     }
 
+    public String getClassName() {
+        return "mass";
+    }
+    
     public boolean match (int id) {
         return myID == id;
     }

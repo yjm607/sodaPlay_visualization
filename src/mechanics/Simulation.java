@@ -100,6 +100,10 @@ public class Simulation {
         return myEnvironment;
     }
     
+    public List<Drawable> getmyDrawings() {
+        return myDrawings;
+    }
+    
     public void passDrawingsInfoToEnvironment() {
         for (Drawable d : myDrawings) {
             myEnvironment.addDrawing(d);
