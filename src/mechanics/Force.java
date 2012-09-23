@@ -67,7 +67,7 @@ public class Force {
      * other force.
      */
     public double getRelativeMagnitude (Force other) {
-        return -getMagnitude()
+        return getMagnitude()
                 * Math.cos(Math.toRadians(getAngleBetween(other)));
     }
 

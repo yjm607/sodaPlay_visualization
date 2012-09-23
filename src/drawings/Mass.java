@@ -44,12 +44,13 @@ public class Mass implements Drawable {
 
     public void update (Simulation canvas, double dt) {
         applyForce(canvas.getGravity(myMass));
-        applyForce(canvas.getViscosity(this));
+        //applyForce(canvas.getViscosity(this));
         //applyForce(canvas.getCenterMass(this));
-        applyForce(getBounce(canvas.getSize()));
         // convert force back into Mover's velocity
+        myAcceleration.scale(1.0 / myMass);
         getVelocity().sum(myAcceleration);
         myAcceleration.reset();
+        getBounce(canvas.getSize());
         // move mass by velocity if mass isn't fixed
         if (!isFixed) {
             myCenter.setLocation(myCenter.getX() + myVelocity.getXChange() * dt,
@@ -77,26 +78,26 @@ public class Mass implements Drawable {
     }*/
 
     // check for move out of bounds
-    private Force getBounce (Dimension bounds) {
-        Force impulse = new Force();
+    private void getBounce (Dimension bounds) {
+        Force normal = new Force();
         if (getLeft() < 0) {
-            impulse = new Force(0, 2);
+            normal = new Force(0,1);
             setCenter(getSize().width / 2, getCenter().getY());
         }
         else if (getRight() > bounds.width) {
-            impulse = new Force(180, 2);
+            normal = new Force(180,1);
             setCenter(bounds.width - getSize().width / 2, getCenter().getY());
         }
         if (getTop() < 0) {
-            impulse = new Force(270, 2);
+            normal = new Force(90,1);
             setCenter(getCenter().getX(), getSize().height / 2);
         }
         else if (getBottom() > bounds.height) {
-            impulse = new Force(90, 2);
+            normal = new Force(270,1);
             setCenter(getCenter().getX(), bounds.height - getSize().height / 2);
         }
-        impulse.scale(getVelocity().getRelativeMagnitude(impulse));
-        return impulse;
+        normal.scale(-2.0 * normal.getRelativeMagnitude(myVelocity) * myVelocity.getMagnitude());
+        myVelocity.sum(normal);
     }
 
     /**
@@ -132,8 +133,9 @@ public class Mass implements Drawable {
      */
     public void shiftCenter (double increment, double angle) {
         setCenter(
-                getCenter().getX() + increment * Math.cos(angle),
-                getCenter().getY() + increment * Math.sin(angle));
+                getCenter().getX() + increment * Math.cos(Math.toRadians(angle)),
+                getCenter().getY() + increment * Math.sin(Math.toRadians(angle))
+                );
     }
 
     /**

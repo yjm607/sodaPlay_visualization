@@ -51,7 +51,7 @@ public class Spring implements Drawable {
     public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
-        double myAngle = Math.toRadians(Force.angleBetween(dx, dy));
+        double myAngle = Force.angleBetween(dx, dy);
         double myDistanceBetweenPoints = Force.distanceBetween(dx, dy);
         double myLengthIncrement = (myLength - myDistanceBetweenPoints) / 2;
         if (!myStart.isFixed()) {

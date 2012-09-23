@@ -80,13 +80,15 @@ public class Simulation {
     }
 
     public Force getGravity(double mass) {
-        return myGravity;
+        Force result = new Force(myGravity);
+        result.scale(mass);
+        return result;
     }
     
-    public Force getViscosity(Mass mass) {
+    /*public Force getViscosity(Mass mass) {
         Force velocity = new Force(mass.getVelocity());
         velocity.negate();
         Force result = new Force(velocity.getDirection(), velocity.getMagnitude() * myViscosity);
         return result;
-    }
+    }*/
 }
