@@ -44,7 +44,7 @@ public class Mass implements Drawable {
 
     public void update (Simulation canvas, double dt) {
         applyForce(canvas.getGravity(myMass));
-        //applyForce(canvas.getViscosity(this));
+        applyForce(canvas.getViscosity(this));
         //applyForce(canvas.getCenterMass(this));
         // convert force back into Mover's velocity
         myAcceleration.scale(1.0 / myMass);
@@ -138,6 +138,13 @@ public class Mass implements Drawable {
                 );
     }
 
+    /**
+     * Get the mass value.
+     */
+    public double getMass () {
+        return myMass;
+    }
+    
     /**
      * Returns shape's left-most coordinate.
      */
