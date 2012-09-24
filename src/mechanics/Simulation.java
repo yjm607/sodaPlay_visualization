@@ -27,14 +27,6 @@ public class Simulation {
         myContainer = container;
         myEnvironment = new Environment(container);
     }
-
-//    public void add(Scanner line, String type) {
-//        myEnvironment.add(line, type);
-//    }
-    
-//    public void add (Drawable drawing) {
-//        myDrawings.add(drawing);
-//    }
     
     public void add (Assembly assembly) {
         myAssemblies.add(assembly);
@@ -62,12 +54,6 @@ public class Simulation {
         }
     }
 
-//    void updateMovers (double dt) {
-//        for (Drawable d : myAssemblies) {
-//            d.update(this, dt);
-//        }
-//    }
-
     /**
      * Returns size (in pixels) of the game area.
      */
@@ -75,18 +61,15 @@ public class Simulation {
         return myContainer.getSize();
     }
 
-//    public Drawable getDrawable (int id) {
-//        for (Drawable d : myDrawings) {
-//            if (d.match(id)) return d;
-//        }
-//        return null;
-//    }
-
     public Environment getEnvironment() {
         return myEnvironment;
     }
     
     public List<Assembly> getMyAssemblies() {
         return myAssemblies;
-    }    
+    }
+
+    public void clearAssemblies () {
+        myAssemblies.clear();
+     }    
 }

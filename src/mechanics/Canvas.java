@@ -36,6 +36,7 @@ public class Canvas extends JComponent {
 
     // user's game to be animated
     private Simulation myTarget;
+    private Factory myFactory;
     // drives simulation
     private Timer myTimer;
     // input state
@@ -153,9 +154,9 @@ public class Canvas extends JComponent {
     }
 
     private void loadModel () {
-        final Factory factory = new Factory();
-        readInput(factory, "Select data file for masses/springs/bars/muscles.");
-        readInput(factory, "Select data file for environemnt.");
+        myFactory = new Factory();
+        readInput(myFactory, "Select data file for masses/springs/bars/muscles.");
+        readInput(myFactory, "Select data file for environemnt.");
     }
 
     private void readInput (final Factory factory, String prompt) {
@@ -181,7 +182,12 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_P:
                 System.out.println(myTarget);
                 break;
-                
+            case KeyEvent.VK_N:
+                readInput(myFactory, "Read additional assembly.");
+                break;
+            case KeyEvent.VK_C:
+                myTarget.clearAssemblies();
+                break;    
             default:
                 // good style
                 break;
