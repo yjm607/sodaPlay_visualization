@@ -1,9 +1,12 @@
 package mechanics;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import drawings.Drawable;
+import drawings.Mass;
 
 
 public class Assembly {
@@ -30,15 +33,33 @@ public class Assembly {
             d.update(mySimulation, this, dt);
         }
     }
-    
+
     public Drawable getDrawable (int id) {
         for (Drawable d : myDrawings) {
             if (d.match(id)) return d;
         }
         return null;
     }
-    
-    public List<Drawable> getMyDrawings() {
+
+    public List<Drawable> getMyDrawings () {
         return myDrawings;
     }
+
+    public Mass getNearestMass (Point point) {
+        Mass nearestMass = null;
+        double minDistance = Math.max(mySimulation.getSize().getHeight(),
+                mySimulation.getSize().getWidth());
+        for (Drawable d : myDrawings) {
+            if (d.getClassName().equals("mass")) {
+                double distance = Force.distanceBetween(point,
+                        ((Mass) d).getCenter());
+                if (distance < minDistance) {
+                    nearestMass = (Mass) d;
+                    minDistance = distance;
+                }
+            }
+        }
+        return nearestMass;
+    }
+
 }

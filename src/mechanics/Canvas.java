@@ -1,4 +1,5 @@
 package mechanics;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,15 +9,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.Timer;
+import drawings.Bar;
 import drawings.Drawable;
 import drawings.Mass;
+import drawings.Spring;
 
 
 /**
@@ -33,6 +39,10 @@ public class Canvas extends JComponent {
     // default muscle oscillation period
     public static final double MUSCLE_OSCILLATION_PERIOD = 1.5;
     public static final double CENTER_MASS_FORCE_DISTANCE_DIVIDER = 15;
+    // mouse dragging information
+    private Assembly nearestAssembly;
+    private Mass mouseMass;
+    private Bar mouseBar;
 
     // user's game to be animated
     private Simulation myTarget;
@@ -144,18 +154,27 @@ public class Canvas extends JComponent {
             }
         });
         myLastMousePosition = new Point();
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                myLastMousePosition = e.getPoint();
+                manageMouseReleased(myLastMousePosition);
+            }
+        });
         addMouseMotionListener(new MouseMotionAdapter() {
+
             @Override
             public void mouseDragged (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
-                manageMouseDragging(myLastMousePosition);
+                manageMouseDragged(myLastMousePosition);
             }
         });
     }
 
     private void loadModel () {
         myFactory = new Factory();
-        readInput(myFactory, "Select data file for masses/springs/bars/muscles.");
+        readInput(myFactory,
+                "Select data file for masses/springs/bars/muscles.");
         readInput(myFactory, "Select data file for environemnt.");
     }
 
@@ -187,27 +206,43 @@ public class Canvas extends JComponent {
                 break;
             case KeyEvent.VK_C:
                 myTarget.clearAssemblies();
-                break;    
+                break;
             default:
                 // good style
                 break;
         }
     }
-    
 
-    private void manageMouseDragging (Point point) {
-//          List<Drawable> myDrawings = myTarget.getMyAssemblies();
-//          Mass nearestMass = null;
-//          double minDistance = getSize().getHeight();
-//          for (Drawable d : myDrawings) {
-//              if (d.getClassName().equals("mass")) {
-//                  double distance = Force.distanceBetween(point,
-//                          ((Mass) d).getCenter());
-//                  if (distance < minDistance) {
-//                      nearestMass = (Mass) d;
-//                      minDistance = distance;
-//                  }
-//              }
-//          }
-      }
+    private void manageMouseDragged (Point point) {
+        System.out.println(point.getX() + "   " + point.getY());
+        if (mouseMass != null) {
+            mouseMass.setCenter(point.getX(), point.getY());
+        }
+        else {
+            List<Assembly> myAssemblies = myTarget.getMyAssemblies();
+            Mass nearestMass = null;
+            double minDistance = Math.max(getSize().getHeight(), getSize()
+                    .getWidth());
+            for (Assembly a : myAssemblies) {
+                Mass localNearestMass = a.getNearestMass(point);
+                double localMinDistance = point.distance(localNearestMass
+                        .getCenter());
+                if (localMinDistance <= minDistance) {
+                    nearestMass = localNearestMass;
+                    nearestAssembly = a;
+                    minDistance = localMinDistance;
+                }
+            }
+            mouseMass = new Mass(-1, point.getX(), point.getY(), -1);
+            mouseBar = new Bar(mouseMass, nearestMass, minDistance, -1);
+            nearestAssembly.add(mouseMass);
+            nearestAssembly.add(mouseBar);
+        }
+    }
+    private void manageMouseReleased(Point point) {
+        nearestAssembly.getMyDrawings().remove(mouseMass);
+        nearestAssembly.getMyDrawings().remove(mouseBar);
+        mouseMass = null;
+        mouseBar = null;
+    }
 }
