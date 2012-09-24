@@ -207,6 +207,15 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_C:
                 myTarget.clearAssemblies();
                 break;
+            case KeyEvent.VK_V:
+            case KeyEvent.VK_G:
+            case KeyEvent.VK_M:
+            case KeyEvent.VK_1:
+            case KeyEvent.VK_2:
+            case KeyEvent.VK_3:
+            case KeyEvent.VK_4:
+                myTarget.getEnvironment().toggleForce(keyCode);
+                break;
             default:
                 // good style
                 break;
