@@ -13,7 +13,10 @@ import drawings.Mass;
 public class Environment {
 
     private Canvas myContainer;
-    private HashMap<Integer, Object[]> myEnvironmentalForces = new HashMap<Integer, Object[]>();
+    private HashMap<Integer, Object[]> myForces = new HashMap<Integer, Object[]>();
+    private int[] keyCodes = new int[] { KeyEvent.VK_V, KeyEvent.VK_G,
+            KeyEvent.VK_M, KeyEvent.VK_1, KeyEvent.VK_2, KeyEvent.VK_3,
+            KeyEvent.VK_4 };
 
     private double myGravityAngle;
     private double myGravityMagnitude;
@@ -34,16 +37,9 @@ public class Environment {
         myCenterMassForceMagnitude = 0;
         myCenterMassExponent = 0;
         myRawWallForces = new HashMap<Force, Double>();
-        initializeForceList();
-    }
-
-    private void initializeForceList () {
         Object[] blankForce = new Object[] { new Force(), true };
-        int[] keyCodes = new int[] { KeyEvent.VK_V, KeyEvent.VK_G,
-                KeyEvent.VK_M, KeyEvent.VK_1, KeyEvent.VK_2, KeyEvent.VK_3,
-                KeyEvent.VK_4 };
         for (int i = 0; i < keyCodes.length; i++) {
-            myEnvironmentalForces.put(keyCodes[i], blankForce);
+            myForces.put(keyCodes[i], blankForce);
         }
     }
 
@@ -86,27 +82,43 @@ public class Environment {
     public Force getAllForces (Mass mass, Assembly assembly) {
         resetAllForces(mass, assembly);
         Force totalEnvironmentForce = new Force();
-        for (Map.Entry<Integer, Object[]> entry : myEnvironmentalForces.entrySet()) {
+        for (Map.Entry<Integer, Object[]> entry : myForces.entrySet()) {
             Force thisEnvironmentalForce = (Force) entry.getValue()[0];
             Boolean isToggledOn = (Boolean) entry.getValue()[1];
-            if(isToggledOn) totalEnvironmentForce.sum(thisEnvironmentalForce);
+            if (isToggledOn) totalEnvironmentForce.sum(thisEnvironmentalForce);
         }
+        for (int i = 0; i < keyCodes.length; i++) {
+            // System.out.println(keyCodes[i] + " " +
+            // myForces.get(keyCodes[i])[0]
+            // + " is " + myForces.get(keyCodes[i])[1] + " for mass "
+            // + mass.getMass());
+        }
+
         return totalEnvironmentForce;
     }
 
     private void resetAllForces (Mass mass, Assembly assembly) {
-        initializeForceList();
+        clearForces();
         setGravity(mass, myGravityAngle, myGravityMagnitude);
         setViscosity(myViscosity, mass);
         setCenterMassForce(mass, assembly);
         setWallForce(mass);
     }
 
+    private void clearForces () {
+        for (int i = 0; i < keyCodes.length; i++) {
+            Boolean currentForceToggle = (Boolean) myForces.get(keyCodes[i])[1];
+            Object[] blankForce = new Object[] { new Force(),
+                    currentForceToggle };
+            myForces.put(keyCodes[i], blankForce);
+        }
+    }
+
     private void setGravity (Mass mass, double angle, double magnitude) {
         Force gravityForce = new Force(angle, magnitude);
         gravityForce.scale(mass.getMass());
-        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_G)[1];
-        myEnvironmentalForces.put(KeyEvent.VK_G,
+        Boolean currentToggle = (Boolean) myForces.get(KeyEvent.VK_G)[1];
+        myForces.put(KeyEvent.VK_G,
                 new Object[] { gravityForce, currentToggle });
     }
 
@@ -115,8 +127,8 @@ public class Environment {
         velocity.negate();
         Force viscosityForce = new Force(velocity.getDirection(),
                 velocity.getMagnitude() * viscosity);
-        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_V)[1];
-        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { viscosityForce,
+        Boolean currentToggle = (Boolean) myForces.get(KeyEvent.VK_V)[1];
+        myForces.put(KeyEvent.VK_V, new Object[] { viscosityForce,
                 currentToggle });
     }
 
@@ -139,8 +151,8 @@ public class Environment {
         double magnitude = myCenterMassForceMagnitude
                 / Math.pow(distance, myCenterMassExponent);
         Force centerMassForce = new Force(angle, magnitude);
-        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_M)[1];
-        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { centerMassForce,
+        Boolean currentToggle = (Boolean) myForces.get(KeyEvent.VK_M)[1];
+        myForces.put(KeyEvent.VK_M, new Object[] { centerMassForce,
                 currentToggle });
     }
 
@@ -155,8 +167,8 @@ public class Environment {
                     distance = mass.getCenter().getY()
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_1)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_1, new Object[] { oneWallForce,
+                    currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_1)[1];
+                    myForces.put(KeyEvent.VK_1, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
                 case 180:
@@ -164,8 +176,8 @@ public class Environment {
                             .getX())
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_2)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_2, new Object[] { oneWallForce,
+                    currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_2)[1];
+                    myForces.put(KeyEvent.VK_2, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
                 case 270:
@@ -173,8 +185,8 @@ public class Environment {
                             .getY())
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_3)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_3, new Object[] { oneWallForce,
+                    currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_3)[1];
+                    myForces.put(KeyEvent.VK_3, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
 
@@ -182,8 +194,8 @@ public class Environment {
                     distance = mass.getCenter().getX()
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_4)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_4, new Object[] { oneWallForce,
+                    currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_4)[1];
+                    myForces.put(KeyEvent.VK_4, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
             }
@@ -191,10 +203,12 @@ public class Environment {
     }
 
     public void toggleForce (int keyCode) {
-        Boolean currentForceToggle = (Boolean) myEnvironmentalForces.get(keyCode)[1];
-        Force currentForce = (Force) myEnvironmentalForces.get(keyCode)[0];
-        myEnvironmentalForces.put(keyCode, new Object[] { currentForce,
-                !currentForceToggle });
+        Boolean currentForceToggle = (Boolean) myForces.get(keyCode)[1];
+        Force currentForce = (Force) myForces.get(keyCode)[0];
+        myForces.put(keyCode,
+                new Object[] { currentForce, !currentForceToggle });
+        System.out.println(KeyEvent.getKeyText(keyCode) + " is now " + myForces.get(keyCode)[1]
+                + ", was " + currentForceToggle.toString());
     }
 
 }
