@@ -193,7 +193,7 @@ public class Environment {
     public void toggleForce (int keyCode) {
         Boolean currentForceToggle = (Boolean) myEnvironmentalForces.get(keyCode)[1];
         Force currentForce = (Force) myEnvironmentalForces.get(keyCode)[0];
-        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { currentForce,
+        myEnvironmentalForces.put(keyCode, new Object[] { currentForce,
                 !currentForceToggle });
     }
 
