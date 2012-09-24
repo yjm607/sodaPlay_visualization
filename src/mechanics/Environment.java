@@ -13,14 +13,7 @@ import drawings.Mass;
 public class Environment {
 
     private Canvas myContainer;
-    private ArrayList<Force> myForceList = new ArrayList<Force>();
-    private Force myGravityForce;
-    private Force myViscosityForce;
-    private Force myCenterMassForce;
-    private Force myWallForce1;
-    private Force myWallForce2;
-    private Force myWallForce3;
-    private Force myWallForce4;
+    private HashMap<Integer, Object[]> myEnvironmentalForces = new HashMap<Integer, Object[]>();
 
     private double myGravityAngle;
     private double myGravityMagnitude;
@@ -28,7 +21,6 @@ public class Environment {
     private double myCenterMassForceMagnitude;
     private double myCenterMassExponent;
     private HashMap<Force, Double> myRawWallForces;
-    private HashMap<Integer, Boolean> forceToggles;
 
     public Environment (Canvas container) {
         myContainer = container;
@@ -42,18 +34,17 @@ public class Environment {
         myCenterMassForceMagnitude = 0;
         myCenterMassExponent = 0;
         myRawWallForces = new HashMap<Force, Double>();
-        myWallForce1 = new Force();
-        myWallForce2 = new Force();
-        myWallForce3 = new Force();
-        myWallForce4 = new Force();
-        forceToggles = new HashMap<Integer, Boolean>();
-        forceToggles.put(KeyEvent.VK_V, true);
-        forceToggles.put(KeyEvent.VK_G, true);
-        forceToggles.put(KeyEvent.VK_M, true);
-        forceToggles.put(KeyEvent.VK_1, true);
-        forceToggles.put(KeyEvent.VK_2, true);
-        forceToggles.put(KeyEvent.VK_3, true);
-        forceToggles.put(KeyEvent.VK_4, true);
+        initializeForceList();
+    }
+
+    private void initializeForceList () {
+        Object[] blankForce = new Object[] { new Force(), true };
+        int[] keyCodes = new int[] { KeyEvent.VK_V, KeyEvent.VK_G,
+                KeyEvent.VK_M, KeyEvent.VK_1, KeyEvent.VK_2, KeyEvent.VK_3,
+                KeyEvent.VK_4 };
+        for (int i = 0; i < keyCodes.length; i++) {
+            myEnvironmentalForces.put(keyCodes[i], blankForce);
+        }
     }
 
     public void add (Scanner line, String type) {
@@ -69,7 +60,6 @@ public class Environment {
             myCenterMassExponent = line.nextDouble();
         }
         else if (type.equals("wall")) {
-            HashMap<Force, Double> result = new HashMap<Force, Double>();
             int id = line.nextInt();
             double magnitude = line.nextDouble();
             double exponent = line.nextDouble();
@@ -95,40 +85,17 @@ public class Environment {
 
     public Force getAllForces (Mass mass, Assembly assembly) {
         resetAllForces(mass, assembly);
-        toggleForces();
         Force totalEnvironmentForce = new Force();
-        for (Force f : myForceList) {
-            totalEnvironmentForce.sum(f);
+        for (Map.Entry<Integer, Object[]> entry : myEnvironmentalForces.entrySet()) {
+            Force thisEnvironmentalForce = (Force) entry.getValue()[0];
+            Boolean isToggledOn = (Boolean) entry.getValue()[1];
+            if(isToggledOn) totalEnvironmentForce.sum(thisEnvironmentalForce);
         }
         return totalEnvironmentForce;
     }
 
-    private void toggleForces() {
-        if (!forceToggles.get(KeyEvent.VK_V)) {
-            myForceList.remove(myViscosityForce);
-        }
-        if (!forceToggles.get(KeyEvent.VK_G)) {
-            myForceList.remove(myGravityForce);
-        }
-        if (!forceToggles.get(KeyEvent.VK_M)) {
-            myForceList.remove(myCenterMassForce);
-        }
-        if (!forceToggles.get(KeyEvent.VK_1)) {
-            myForceList.remove(myWallForce1);
-        }
-        if (!forceToggles.get(KeyEvent.VK_2)) {
-            myForceList.remove(myWallForce2);
-        }
-        if (!forceToggles.get(KeyEvent.VK_3)) {
-            myForceList.remove(myWallForce3);
-        }
-        if (!forceToggles.get(KeyEvent.VK_4)) {
-            myForceList.remove(myWallForce4);
-        }
-    }
-
     private void resetAllForces (Mass mass, Assembly assembly) {
-        myForceList.clear();
+        initializeForceList();
         setGravity(mass, myGravityAngle, myGravityMagnitude);
         setViscosity(myViscosity, mass);
         setCenterMassForce(mass, assembly);
@@ -136,17 +103,21 @@ public class Environment {
     }
 
     private void setGravity (Mass mass, double angle, double magnitude) {
-        myGravityForce = new Force(angle, magnitude);
-        myGravityForce.scale(mass.getMass());
-        myForceList.add(myGravityForce);
+        Force gravityForce = new Force(angle, magnitude);
+        gravityForce.scale(mass.getMass());
+        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_G)[1];
+        myEnvironmentalForces.put(KeyEvent.VK_G,
+                new Object[] { gravityForce, currentToggle });
     }
 
     private void setViscosity (double viscosity, Mass mass) {
         Force velocity = new Force(mass.getVelocity());
         velocity.negate();
-        myViscosityForce = new Force(velocity.getDirection(),
+        Force viscosityForce = new Force(velocity.getDirection(),
                 velocity.getMagnitude() * viscosity);
-        myForceList.add(myViscosityForce);
+        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_V)[1];
+        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { viscosityForce,
+                currentToggle });
     }
 
     private void setCenterMassForce (Mass mass, Assembly assembly) {
@@ -167,8 +138,10 @@ public class Environment {
                 / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
         double magnitude = myCenterMassForceMagnitude
                 / Math.pow(distance, myCenterMassExponent);
-        myCenterMassForce = new Force(angle, magnitude);
-        myForceList.add(myCenterMassForce);
+        Force centerMassForce = new Force(angle, magnitude);
+        Boolean currentToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_M)[1];
+        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { centerMassForce,
+                currentToggle });
     }
 
     private void setWallForce (Mass mass) {
@@ -176,44 +149,51 @@ public class Environment {
             Force oneWallForce = new Force(entry.getKey());
             double exponent = entry.getValue();
             double distance = 0;
+            Boolean currentForceToggle;
             switch ((int) oneWallForce.getDirection()) {
                 case 90:
                     distance = mass.getCenter().getY()
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    myWallForce1 = oneWallForce;
+                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_1)[1];
+                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                            currentForceToggle });
                     break;
                 case 180:
                     distance = (myContainer.getSize().width - mass.getCenter()
                             .getX())
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
-                    oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    myWallForce2 = oneWallForce;
+                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_2)[1];
+                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                            currentForceToggle });
                     break;
                 case 270:
                     distance = (myContainer.getSize().height - mass.getCenter()
                             .getY())
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    myWallForce3 = oneWallForce;
+                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_3)[1];
+                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                            currentForceToggle });
                     break;
 
                 case 0:
                     distance = mass.getCenter().getX()
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
-                    myWallForce4 = oneWallForce;
+                    currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_4)[1];
+                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                            currentForceToggle });
                     break;
             }
         }
-        myForceList.add(myWallForce1);
-        myForceList.add(myWallForce2);
-        myForceList.add(myWallForce3);
-        myForceList.add(myWallForce4);
     }
 
     public void toggleForce (int keyCode) {
-        forceToggles.put(keyCode, !forceToggles.get(keyCode));
+        Boolean currentForceToggle = (Boolean) myEnvironmentalForces.get(keyCode)[1];
+        Force currentForce = (Force) myEnvironmentalForces.get(keyCode)[0];
+        myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { currentForce,
+                !currentForceToggle });
     }
 
 }
