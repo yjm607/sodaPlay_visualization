@@ -214,7 +214,6 @@ public class Environment {
 
     public void toggleForce (int keyCode) {
         forceToggles.put(keyCode, !forceToggles.get(keyCode));
-        System.out.println("toggled" + keyCode + " is now " + forceToggles.get(keyCode));
     }
 
 }

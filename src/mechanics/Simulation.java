@@ -17,7 +17,7 @@ public class Simulation {
     private List<Assembly> myAssemblies;
     private Canvas myContainer;
     private Environment myEnvironment;
-
+    private int myWalledAreaOffset;
 
     /**
      * Create a Canvas with the given size.
@@ -26,6 +26,7 @@ public class Simulation {
         myAssemblies = new ArrayList<Assembly>();
         myContainer = container;
         myEnvironment = new Environment(container);
+        myWalledAreaOffset = 0;
     }
     
     public void add (Assembly assembly) {
@@ -71,5 +72,14 @@ public class Simulation {
 
     public void clearAssemblies () {
         myAssemblies.clear();
-     }    
+     }
+    
+    public int getMyWalledAreaOffset() {
+        return myWalledAreaOffset;
+    }
+    
+    public void setMyWalledAreaOffset(int offsetIncrement) {
+        myWalledAreaOffset += offsetIncrement;
+        System.out.println("Offset is now " +myWalledAreaOffset);
+    }
 }

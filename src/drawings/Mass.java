@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import mechanics.Assembly;
+import mechanics.Canvas;
 import mechanics.Force;
 import mechanics.Simulation;
 
@@ -49,7 +50,7 @@ public class Mass implements Drawable {
         myAcceleration.scale(1.0 / myMass);
         getVelocity().sum(myAcceleration);
         myAcceleration.reset();
-        getBounce(canvas.getSize());
+        getBounce(canvas);
         // move mass by velocity if mass isn't fixed
         if (!isFixed) {
             myCenter.setLocation(myCenter.getX() + myVelocity.getXChange() * dt,
@@ -74,23 +75,25 @@ public class Mass implements Drawable {
     }
 
     // check for move out of bounds
-    private void getBounce (Dimension bounds) {
+    private void getBounce (Simulation canvas) {
+        Dimension bounds = canvas.getSize();
+        int walledAreaOffset = canvas.getMyWalledAreaOffset();
         Force normal = new Force();
-        if (getLeft() < 0) {
+        if (getLeft() < -walledAreaOffset) {
             normal = new Force(0,1);
-            setCenter(getSize().width / 2, getCenter().getY());
+            setCenter((getSize().width / 2) - walledAreaOffset, getCenter().getY());
         }
-        else if (getRight() > bounds.width) {
+        else if (getRight() > bounds.width + walledAreaOffset) {
             normal = new Force(180,1);
-            setCenter(bounds.width - getSize().width / 2, getCenter().getY());
+            setCenter(bounds.width - getSize().width / 2 + walledAreaOffset, getCenter().getY());
         }
-        if (getTop() < 0) {
+        if (getTop() < -walledAreaOffset) {
             normal = new Force(90,1);
-            setCenter(getCenter().getX(), getSize().height / 2);
+            setCenter(getCenter().getX(), (getSize().height / 2) - walledAreaOffset);
         }
-        else if (getBottom() > bounds.height) {
+        else if (getBottom() > bounds.height + walledAreaOffset) {
             normal = new Force(270,1);
-            setCenter(getCenter().getX(), bounds.height - getSize().height / 2);
+            setCenter(getCenter().getX(), bounds.height - getSize().height / 2 + walledAreaOffset);
         }
         normal.scale(-2.0 * normal.getRelativeMagnitude(myVelocity) * myVelocity.getMagnitude());
         myVelocity.sum(normal);

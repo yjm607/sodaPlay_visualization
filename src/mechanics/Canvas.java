@@ -39,6 +39,9 @@ public class Canvas extends JComponent {
     // default muscle oscillation period
     public static final double MUSCLE_OSCILLATION_PERIOD = 1.5;
     public static final double CENTER_MASS_FORCE_DISTANCE_DIVIDER = 15;
+    // walled area offset increment value
+    public static final int OFFSET_INCREMENT = 10;
+    
     // mouse dragging information
     private Assembly nearestAssembly;
     private Mass mouseMass;
@@ -216,6 +219,12 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_4:
                 myTarget.getEnvironment().toggleForce(keyCode);
                 break;
+            case KeyEvent.VK_UP:
+                myTarget.setMyWalledAreaOffset(OFFSET_INCREMENT);
+                break;
+            case KeyEvent.VK_DOWN:
+                myTarget.setMyWalledAreaOffset(-OFFSET_INCREMENT);
+                break;
             default:
                 // good style
                 break;
@@ -223,7 +232,6 @@ public class Canvas extends JComponent {
     }
 
     private void manageMouseDragged (Point point) {
-        System.out.println(point.getX() + "   " + point.getY());
         if (mouseMass != null) {
             mouseMass.setCenter(point.getX(), point.getY());
         }
