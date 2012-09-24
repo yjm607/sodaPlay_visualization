@@ -156,15 +156,16 @@ public class Environment {
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_1)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                    myEnvironmentalForces.put(KeyEvent.VK_1, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
                 case 180:
                     distance = (myContainer.getSize().width - mass.getCenter()
                             .getX())
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                    oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_2)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                    myEnvironmentalForces.put(KeyEvent.VK_2, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
                 case 270:
@@ -173,7 +174,7 @@ public class Environment {
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_3)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                    myEnvironmentalForces.put(KeyEvent.VK_3, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
 
@@ -182,7 +183,7 @@ public class Environment {
                             / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myEnvironmentalForces.get(KeyEvent.VK_4)[1];
-                    myEnvironmentalForces.put(KeyEvent.VK_G, new Object[] { oneWallForce,
+                    myEnvironmentalForces.put(KeyEvent.VK_4, new Object[] { oneWallForce,
                             currentForceToggle });
                     break;
             }
