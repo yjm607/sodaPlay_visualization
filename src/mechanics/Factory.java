@@ -24,33 +24,6 @@ public class Factory {
             else {
                 loadAssembly(sim, input);
             }
-//            while (input.hasNext()) {
-//                Scanner line = new Scanner(input.nextLine());
-//                if (line.hasNext()) {
-//                    String type = line.next();
-//                    if (type.equals("mass")) {
-//                        sim.add(massCommand(line));
-//                    }
-//                    else if (type.equals("spring")) {
-//                        sim.add(springCommand(line, sim));
-//                    }
-//                    else if (type.equals("muscle")) {
-//                        sim.add(muscleCommand(line, sim));
-//                    }
-//                    else if (type.equals("gravity")) {
-//                        sim.add(line, type);
-//                    }
-//                    else if (type.equals("viscosity")) {
-//                        sim.add(line, type);
-//                    }
-//                    else if (type.equals("centermass")) {
-//                        sim.add(line, type);
-//                    }
-//                    else if (type.equals("wall")) {
-//                        sim.add(line, type);
-//                    }
-//                }
-//            }
             input.close();
         }
         catch (FileNotFoundException e) {
@@ -65,13 +38,13 @@ public class Factory {
             Scanner line = new Scanner(input.nextLine());
             if (line.hasNext()) {
                 String type = line.next();
-                if (type.equals("mass")) {
+                if ("mass".equals(type)) {
                     assembly.add(massCommand(line));
                 }
-                else if (type.equals("spring")) {
+                else if ("spring".equals(type)) {
                     assembly.add(springCommand(line, assembly));
                 }
-                else if (type.equals("muscle")) {
+                else if ("muscle".equals(type)) {
                     assembly.add(muscleCommand(line, assembly));
                 }
             }
@@ -85,18 +58,6 @@ public class Factory {
             if (line.hasNext()) {
                 String type = line.next();
                 sim.getEnvironment().add(line, type);
-                // if (type.equals("gravity")) {
-                // sim.getEnvironment().add(line, type);
-                // }
-                // else if (type.equals("viscosity")) {
-                // sim.add(line, type);
-                // }
-                // else if (type.equals("centermass")) {
-                // sim.add(line, type);
-                // }
-                // else if (type.equals("wall")) {
-                // sim.add(line, type);
-                // }
             }
         }
     }
