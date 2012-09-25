@@ -21,8 +21,8 @@ public final class Main {
      * Start of the program.
      * 
      * @param args
-     *ch to track remote
-Search instead for git set branck to tr        command-line arguments
+     *        ch to track remote
+     *        Search instead for git set branck to tr command-line arguments
      */
     public static void main (String[] args) {
         Canvas display = new Canvas(SIZE);

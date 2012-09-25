@@ -1,9 +1,7 @@
 package mechanics;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import drawings.Drawable;
@@ -38,8 +36,8 @@ public class Environment {
         myCenterMassExponent = 0;
         myRawWallForces = new HashMap<Force, Double>();
         Object[] blankForce = new Object[] { new Force(), true };
-        for (int i = 0; i < keyCodes.length; i++) {
-            myForces.put(keyCodes[i], blankForce);
+        for (int keyCode : keyCodes) {
+            myForces.put(keyCode, blankForce);
         }
     }
 
@@ -85,9 +83,11 @@ public class Environment {
         for (Map.Entry<Integer, Object[]> entry : myForces.entrySet()) {
             Force thisEnvironmentalForce = (Force) entry.getValue()[0];
             Boolean isToggledOn = (Boolean) entry.getValue()[1];
-            if (isToggledOn) totalEnvironmentForce.sum(thisEnvironmentalForce);
+            if (isToggledOn) {
+                totalEnvironmentForce.sum(thisEnvironmentalForce);
+            }
         }
-        for (int i = 0; i < keyCodes.length; i++) {
+        for (int keyCode : keyCodes) {
             // System.out.println(keyCodes[i] + " " +
             // myForces.get(keyCodes[i])[0]
             // + " is " + myForces.get(keyCodes[i])[1] + " for mass "
@@ -106,11 +106,11 @@ public class Environment {
     }
 
     private void clearForces () {
-        for (int i = 0; i < keyCodes.length; i++) {
-            Boolean currentForceToggle = (Boolean) myForces.get(keyCodes[i])[1];
+        for (int keyCode : keyCodes) {
+            Boolean currentForceToggle = (Boolean) myForces.get(keyCode)[1];
             Object[] blankForce = new Object[] { new Force(),
                     currentForceToggle };
-            myForces.put(keyCodes[i], blankForce);
+            myForces.put(keyCode, blankForce);
         }
     }
 
@@ -207,8 +207,9 @@ public class Environment {
         Force currentForce = (Force) myForces.get(keyCode)[0];
         myForces.put(keyCode,
                 new Object[] { currentForce, !currentForceToggle });
-        System.out.println(KeyEvent.getKeyText(keyCode) + " is now " + myForces.get(keyCode)[1]
-                + ", was " + currentForceToggle.toString());
+        System.out.println(KeyEvent.getKeyText(keyCode) + " is now "
+                + myForces.get(keyCode)[1] + ", was "
+                + currentForceToggle.toString());
     }
 
 }

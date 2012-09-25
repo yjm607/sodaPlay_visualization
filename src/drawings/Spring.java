@@ -1,7 +1,7 @@
 package drawings;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 import mechanics.Assembly;
 import mechanics.Force;
 import mechanics.Simulation;
@@ -25,6 +25,7 @@ public class Spring implements Drawable {
         myLength = length;
     }
 
+    @Override
     public void paint (Graphics2D pen) {
         int xStart = (int) myStart.getCenter().getX();
         int yStart = (int) myStart.getCenter().getY();
@@ -34,6 +35,7 @@ public class Spring implements Drawable {
         pen.drawLine(xStart, yStart, xEnd, yEnd);
     }
 
+    @Override
     public void update (Simulation canvas, Assembly assembly, double dt) {
         // apply hooke's law to each attached mass
         double dx = getXLengthComponent();
@@ -45,14 +47,16 @@ public class Spring implements Drawable {
         myEnd.applyForce(f);
     }
 
-    public boolean match(int id) {
+    @Override
+    public boolean match (int id) {
         return false;
     }
-    
-    public String getClassName() {
+
+    @Override
+    public String getClassName () {
         return "string";
     }
-    
+
     public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
@@ -67,15 +71,15 @@ public class Spring implements Drawable {
         }
     }
 
-    public double getXLengthComponent() {
+    public double getXLengthComponent () {
         return myStart.getCenter().getX() - myEnd.getCenter().getX();
     }
 
-    public double getYLengthComponent() {
+    public double getYLengthComponent () {
         return myStart.getCenter().getY() - myEnd.getCenter().getY();
     }
 
-    public void setLength(double newLength) {
+    public void setLength (double newLength) {
         myLength = newLength;
     }
 
@@ -84,7 +88,7 @@ public class Spring implements Drawable {
                 + getYLengthComponent() * getYLengthComponent());
     }
 
-    public void chooseLineStyle(Graphics2D pen) {
+    public void chooseLineStyle (Graphics2D pen) {
         double len = getDistanceBetweenEnds() - myLength;
         if (len < 0.0) {
             pen.setColor(Color.BLUE);

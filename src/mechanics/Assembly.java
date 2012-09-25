@@ -3,7 +3,6 @@ package mechanics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import drawings.Drawable;
 import drawings.Mass;

@@ -1,4 +1,5 @@
 package drawings;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import mechanics.Assembly;
@@ -16,8 +17,8 @@ public class Muscle extends Spring {
     private double myMuscleAge;
     private double myFrequency;
 
-    public Muscle (Mass start, Mass end, double length,
-            double kVal, double amplitude) {
+    public Muscle (Mass start, Mass end, double length, double kVal,
+            double amplitude) {
         super(start, end, length, kVal);
         myAmplitude = amplitude;
         myInitialLength = length;
@@ -32,19 +33,19 @@ public class Muscle extends Spring {
         myMuscleAge += dt;
     }
 
-    public void updateMuscleNaturalLength() {
+    public void updateMuscleNaturalLength () {
         double newNaturalLength = myInitialLength + myAmplitude
                 * Math.sin(myFrequency * myMuscleAge);
         setLength(newNaturalLength);
     }
-    
+
     @Override
-    public String getClassName() {
+    public String getClassName () {
         return "muscle";
     }
-    
+
     @Override
-    public void chooseLineStyle(Graphics2D pen) {
+    public void chooseLineStyle (Graphics2D pen) {
         double len = getDistanceBetweenEnds() - myInitialLength;
         if (len < 0.0) {
             pen.setColor(Color.BLUE);

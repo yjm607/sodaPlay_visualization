@@ -1,10 +1,10 @@
 package drawings;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import mechanics.Assembly;
-import mechanics.Canvas;
 import mechanics.Force;
 import mechanics.Simulation;
 
@@ -39,11 +39,13 @@ public class Mass implements Drawable {
         isFixed = myMass <= 0;
     }
 
+    @Override
     public void paint (Graphics2D pen) {
         pen.setColor(Color.BLACK);
         pen.fillOval(getLeft(), getTop(), getSize().width, getSize().height);
     }
 
+    @Override
     public void update (Simulation canvas, Assembly assembly, double dt) {
         applyForce(canvas.getEnvironment().getAllForces(this, assembly));
         // convert force back into Mover's velocity
@@ -53,8 +55,9 @@ public class Mass implements Drawable {
         getBounce(canvas);
         // move mass by velocity if mass isn't fixed
         if (!isFixed) {
-            myCenter.setLocation(myCenter.getX() + myVelocity.getXChange() * dt,
-                myCenter.getY() + myVelocity.getYChange() * dt);
+            myCenter.setLocation(
+                    myCenter.getX() + myVelocity.getXChange() * dt,
+                    myCenter.getY() + myVelocity.getYChange() * dt);
         }
     }
 
@@ -66,10 +69,12 @@ public class Mass implements Drawable {
         myAcceleration.sum(f);
     }
 
-    public String getClassName() {
+    @Override
+    public String getClassName () {
         return "mass";
     }
-    
+
+    @Override
     public boolean match (int id) {
         return myID == id;
     }
@@ -80,22 +85,27 @@ public class Mass implements Drawable {
         int walledAreaOffset = canvas.getMyWalledAreaOffset();
         Force normal = new Force();
         if (getLeft() < -walledAreaOffset) {
-            normal = new Force(0,1);
-            setCenter((getSize().width / 2) - walledAreaOffset, getCenter().getY());
+            normal = new Force(0, 1);
+            setCenter((getSize().width / 2) - walledAreaOffset, getCenter()
+                    .getY());
         }
         else if (getRight() > bounds.width + walledAreaOffset) {
-            normal = new Force(180,1);
-            setCenter(bounds.width - getSize().width / 2 + walledAreaOffset, getCenter().getY());
+            normal = new Force(180, 1);
+            setCenter(bounds.width - getSize().width / 2 + walledAreaOffset,
+                    getCenter().getY());
         }
         if (getTop() < -walledAreaOffset) {
-            normal = new Force(90,1);
-            setCenter(getCenter().getX(), (getSize().height / 2) - walledAreaOffset);
+            normal = new Force(90, 1);
+            setCenter(getCenter().getX(), (getSize().height / 2)
+                    - walledAreaOffset);
         }
         else if (getBottom() > bounds.height + walledAreaOffset) {
-            normal = new Force(270,1);
-            setCenter(getCenter().getX(), bounds.height - getSize().height / 2 + walledAreaOffset);
+            normal = new Force(270, 1);
+            setCenter(getCenter().getX(), bounds.height - getSize().height / 2
+                    + walledAreaOffset);
         }
-        normal.scale(-2.0 * normal.getRelativeMagnitude(myVelocity) * myVelocity.getMagnitude());
+        normal.scale(-2.0 * normal.getRelativeMagnitude(myVelocity)
+                * myVelocity.getMagnitude());
         myVelocity.sum(normal);
     }
 
@@ -126,15 +136,15 @@ public class Mass implements Drawable {
     public void setCenter (double x, double y) {
         myCenter = new Point2D.Double(x, y);
     }
-    
+
     /**
      * Shift shape's center by increment in the specified direction.
      */
     public void shiftCenter (double increment, double angle) {
         setCenter(
-                getCenter().getX() + increment * Math.cos(Math.toRadians(angle)),
-                getCenter().getY() + increment * Math.sin(Math.toRadians(angle))
-                );
+                getCenter().getX() + increment
+                        * Math.cos(Math.toRadians(angle)), getCenter().getY()
+                        + increment * Math.sin(Math.toRadians(angle)));
     }
 
     /**
@@ -143,7 +153,7 @@ public class Mass implements Drawable {
     public double getMass () {
         return myMass;
     }
-    
+
     /**
      * Returns shape's left-most coordinate.
      */
@@ -173,7 +183,7 @@ public class Mass implements Drawable {
     public int getBottom () {
         return (int) (getCenter().getY() + getSize().height / 2);
     }
-    
+
     /**
      * Reports fixed-ess state.
      */

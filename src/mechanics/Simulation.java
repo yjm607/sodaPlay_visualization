@@ -1,17 +1,20 @@
 package mechanics;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import drawings.Drawable;
-import drawings.Mass;
+
 
 /**
  * Simulates objects moving around in a bounded environment.
  * 
- * @author Robert C. Duvall
+ * @author Robert C. Duvall / modified: Jei Min Yoo & Volodymyr Zavidovych
+ * 
+ */
+/**
+ * @author Jei Min Yoo
+ * 
  */
 public class Simulation {
     private List<Assembly> myAssemblies;
@@ -21,6 +24,8 @@ public class Simulation {
 
     /**
      * Create a Canvas with the given size.
+     * 
+     * @param container used for communication with Canvas object
      */
     public Simulation (Canvas container) {
         myAssemblies = new ArrayList<Assembly>();
@@ -28,13 +33,20 @@ public class Simulation {
         myEnvironment = new Environment(container);
         myWalledAreaOffset = 0;
     }
-    
+
+    /**
+     * Add an assembly object to the list of assemblies.
+     * 
+     * @param assembly used to add to the list.
+     */
     public void add (Assembly assembly) {
         myAssemblies.add(assembly);
     }
+
     /**
      * Paint all shapes on the canvas.
-     * else 
+     * else
+     * 
      * @param pen used to paint shape on the screen
      */
     public void paint (Graphics2D pen) {
@@ -48,6 +60,8 @@ public class Simulation {
      * 
      * This should update the state of the animated shapes by just
      * a little so they appear to move over time.
+     * 
+     * @param dt used to increment time
      */
     public void update (double dt) {
         for (Assembly a : myAssemblies) {
@@ -62,24 +76,43 @@ public class Simulation {
         return myContainer.getSize();
     }
 
-    public Environment getEnvironment() {
+    /**
+     * Gets Environment object through simulation.
+     * 
+     */
+    public Environment getEnvironment () {
         return myEnvironment;
     }
-    
-    public List<Assembly> getMyAssemblies() {
+
+    /**
+     * Gets list of assemblies.
+     * 
+     */
+    public List<Assembly> getMyAssemblies () {
         return myAssemblies;
     }
 
+    /**
+     * Clears the list of assemblies.
+     */
     public void clearAssemblies () {
         myAssemblies.clear();
-     }
-    
-    public int getMyWalledAreaOffset() {
+    }
+
+    /**
+     * Gets offset value for walled area.
+     */
+    public int getMyWalledAreaOffset () {
         return myWalledAreaOffset;
     }
-    
-    public void setMyWalledAreaOffset(int offsetIncrement) {
+
+    /**
+     * Changes walled area offset.
+     * 
+     * @param offsetIncrement used for how much to increment
+     */
+    public void changeMyWalledAreaOffset (int offsetIncrement) {
         myWalledAreaOffset += offsetIncrement;
-        System.out.println("Offset is now " +myWalledAreaOffset);
+        System.out.println("Offset is now " + myWalledAreaOffset);
     }
 }

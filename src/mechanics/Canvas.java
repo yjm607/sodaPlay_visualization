@@ -11,18 +11,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.util.HashMap;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.Timer;
 import drawings.Bar;
-import drawings.Drawable;
 import drawings.Mass;
-import drawings.Spring;
 
 
 /**
@@ -41,11 +36,14 @@ public class Canvas extends JComponent {
     public static final double CENTER_MASS_FORCE_DISTANCE_DIVIDER = 15;
     // walled area offset increment value
     public static final int OFFSET_INCREMENT = 10;
-    
+
     // mouse dragging information
     private Assembly nearestAssembly;
     private Mass mouseMass;
+    private int mouseMassDefaultMass = -1;
+    private int mouseMassDefaultID = -1;
     private Bar mouseBar;
+    private double mouseBarDefaultKVal = -1;
 
     // user's game to be animated
     private Simulation myTarget;
@@ -159,7 +157,7 @@ public class Canvas extends JComponent {
         myLastMousePosition = new Point();
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseReleased (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
                 manageMouseReleased(myLastMousePosition);
             }
@@ -176,13 +174,12 @@ public class Canvas extends JComponent {
 
     private void loadModel () {
         myFactory = new Factory();
-        readInput(myFactory,
-                "Select data file for masses/springs/bars/muscles.");
-        readInput(myFactory, "Select data file for environemnt.");
+        readInput(myFactory, "chooseAssembly");
+        readInput(myFactory, "chooseEnvironment");
     }
 
     private void readInput (final Factory factory, String prompt) {
-        int response = ourChooser.showOpenDialog(null);
+        int response = ourChooser.showDialog(this, prompt);
         if (response == JFileChooser.APPROVE_OPTION) {
             factory.loadModel(myTarget, ourChooser.getSelectedFile());
         }
@@ -220,10 +217,10 @@ public class Canvas extends JComponent {
                 myTarget.getEnvironment().toggleForce(keyCode);
                 break;
             case KeyEvent.VK_UP:
-                myTarget.setMyWalledAreaOffset(OFFSET_INCREMENT);
+                myTarget.changeMyWalledAreaOffset(OFFSET_INCREMENT);
                 break;
             case KeyEvent.VK_DOWN:
-                myTarget.setMyWalledAreaOffset(-OFFSET_INCREMENT);
+                myTarget.changeMyWalledAreaOffset(-OFFSET_INCREMENT);
                 break;
             default:
                 // good style
@@ -236,27 +233,34 @@ public class Canvas extends JComponent {
             mouseMass.setCenter(point.getX(), point.getY());
         }
         else {
-            List<Assembly> myAssemblies = myTarget.getMyAssemblies();
-            Mass nearestMass = null;
-            double minDistance = Math.max(getSize().getHeight(), getSize()
-                    .getWidth());
-            for (Assembly a : myAssemblies) {
-                Mass localNearestMass = a.getNearestMass(point);
-                double localMinDistance = point.distance(localNearestMass
-                        .getCenter());
-                if (localMinDistance <= minDistance) {
-                    nearestMass = localNearestMass;
-                    nearestAssembly = a;
-                    minDistance = localMinDistance;
-                }
-            }
-            mouseMass = new Mass(-1, point.getX(), point.getY(), -1);
-            mouseBar = new Bar(mouseMass, nearestMass, minDistance, -1);
-            nearestAssembly.add(mouseMass);
-            nearestAssembly.add(mouseBar);
+            createMouseDragger(point);
         }
     }
-    private void manageMouseReleased(Point point) {
+
+    private void createMouseDragger (Point point) {
+        List<Assembly> myAssemblies = myTarget.getMyAssemblies();
+        Mass nearestMass = null;
+        double minDistance = Math.max(getSize().getHeight(), getSize()
+                .getWidth());
+        for (Assembly a : myAssemblies) {
+            Mass localNearestMass = a.getNearestMass(point);
+            double localMinDistance = point.distance(localNearestMass
+                    .getCenter());
+            if (localMinDistance <= minDistance) {
+                nearestMass = localNearestMass;
+                nearestAssembly = a;
+                minDistance = localMinDistance;
+            }
+        }
+        mouseMass = new Mass(mouseMassDefaultID, point.getX(), point.getY(),
+                mouseMassDefaultMass);
+        mouseBar = new Bar(mouseMass, nearestMass, minDistance,
+                mouseBarDefaultKVal);
+        nearestAssembly.add(mouseMass);
+        nearestAssembly.add(mouseBar);
+    }
+
+    private void manageMouseReleased (Point point) {
         nearestAssembly.getMyDrawings().remove(mouseMass);
         nearestAssembly.getMyDrawings().remove(mouseBar);
         mouseMass = null;
