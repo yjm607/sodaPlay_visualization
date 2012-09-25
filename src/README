@@ -2,8 +2,8 @@ README
 
 Name: Jei Min Yoo (NETID: jy48), Volodymyr Zavidovych (NETID: vz4)
 Date started: 9/13/12
-Date finished: 9/17/12
-Estimated hours worked: 20
+Date finished: 9/24/12
+Estimated hours worked: 30+
 Resources: 
 http://docs.oracle.com/javase/tutorial/extra/fullscreen/doublebuf.html
 http://docs.oracle.com/javase/6/docs/api/
@@ -15,7 +15,7 @@ Test file: example
 Resource files: none
 
 
-Known bugs: nothing that we can think of.
+Known bugs: sometimes dragging causes exceptions, but it is not design fault, and it doesn't hamper user experience.
 FUNCTIONALITY: 
 - Fixed mass. Implemented via boolean isFixed field
 - Bar. Implemented via forceLengthToNatural() method, which shifts spring's 
@@ -29,4 +29,11 @@ FUNCTIONALITY:
 - Muscle. Is a bar with variable myLength. Inherits Spring class. Changes the natural
   length periodically within the amplitude. Then uses inherited forceLengthToNatural() 
   to move masses.
-Impressions: working in pairs was fun and productive. implementing bars was difficult.
+- Environmental forces (Gravity, viscosity, center of mass, wall repulsion).
+  These forces apply to all Masses. Environment.java manages all these force classes.
+- Multiple assemblies. There can be many groups of objects now.
+- Mouse dragging. User can drag mouse to move objects around.
+- Toggle forces. User can toggle environmental forces.
+- Change size of walled area. User can change walled area size.
+Impressions: working in pairs was fun and productive. implementing environment was difficult.
+             Maintaining functionality while improving design was a challenge.

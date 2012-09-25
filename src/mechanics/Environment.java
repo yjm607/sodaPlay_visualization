@@ -75,6 +75,7 @@ public class Environment {
 
     private void resetAllForces (Mass mass, Assembly assembly) {
         clearForces();
+        // set forces
         myForces.put(KeyEvent.VK_G, new GravityForce(mass, myForces));
         myForces.put(KeyEvent.VK_V, new ViscosityForce(mass, myForces));
         myForces.put(KeyEvent.VK_M, new CenterMassForce(mass, assembly, myForces));

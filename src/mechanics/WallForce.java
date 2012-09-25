@@ -15,7 +15,9 @@ import java.util.Scanner;
 public class WallForce extends Force {
 
     private static HashMap<Force, Double> ourRawWallForces = new HashMap<Force, Double>();
-    private int myKeyCode;
+    private double myExponent;
+    private double myDistance;
+    private double myAngle;
 
     /**
      * Wall Force constructor
@@ -26,51 +28,55 @@ public class WallForce extends Force {
      * @param keyCode keycode of the wall
      */
     public WallForce (Mass mass, HashMap<Integer, Force> forces, int keyCode, Canvas container) {
-        double distance = 0;
-        double angle = 0;
-        myKeyCode = keyCode;
+        initialize();
+        calculateDistanceToMassAndAngle(mass, keyCode, container);
+        setDirection(myAngle);
+        setMagnitude(myDistance, myAngle);
+        boolean currentToggle = forces.get(keyCode).getToggle();
+        setToggle(currentToggle);
+    }
+
+    private void calculateDistanceToMassAndAngle (Mass mass, int keyCode, Canvas container) {
         switch (keyCode) {
             case KeyEvent.VK_1:
-                angle = Canvas.DOWN_ANGLE;
-                distance = mass.getCenter().getY() / Canvas.FORCE_DISTANCE_DIVIDER;
+                myAngle = Canvas.DOWN_ANGLE;
+                myDistance = mass.getCenter().getY() / Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             case KeyEvent.VK_2:
-                angle = Canvas.LEFT_ANGLE;
-                distance = (container.getSize().width - mass.getCenter().getX()) /
+                myAngle = Canvas.LEFT_ANGLE;
+                myDistance =
+                        (container.getSize().width - mass.getCenter().getX()) /
                                 Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             case KeyEvent.VK_3:
-                angle = Canvas.UP_ANGLE;
-                distance = (container.getSize().height - mass.getCenter().getY()) /
+                myAngle = Canvas.UP_ANGLE;
+                myDistance =
+                        (container.getSize().height - mass.getCenter().getY()) /
                                 Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             case KeyEvent.VK_4:
-                angle = Canvas.RIGHT_ANGLE;
-                distance = mass.getCenter().getY() / Canvas.FORCE_DISTANCE_DIVIDER;
+                myAngle = Canvas.RIGHT_ANGLE;
+                myDistance = mass.getCenter().getY() / Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             default:
                 break;
         }
-        boolean currentToggle = forces.get(keyCode).getToggle();
-        Force unitForce = new Force();
-        double exponent = 0;
-        for (Map.Entry<Force, Double> entry : ourRawWallForces.entrySet()) {
-            if (entry.getKey().getDirection() == angle) {
-                exponent = entry.getValue();
-                unitForce = new Force(entry.getKey());
-            }
-        }
-        unitForce.scale(1 / Math.pow(distance, exponent));
-        setToggle(currentToggle);
-        setMagnitude(unitForce.getMagnitude());
-        setDirection(unitForce.getDirection());
     }
 
-    /**
-     * @return returns wall's keyCode
-     */
-    public int getKeyCode () {
-        return myKeyCode;
+    private void initialize () {
+        myExponent = 0;
+        myDistance = 0;
+        myAngle = 0;
+    }
+
+    private void setMagnitude (double distance, double angle) {
+        for (Map.Entry<Force, Double> entry : ourRawWallForces.entrySet()) {
+            if (entry.getKey().getDirection() == angle) {
+                myExponent = entry.getValue();
+                super.setMagnitude(entry.getKey().getMagnitude());
+            }
+        }
+        scale(1 / Math.pow(distance, myExponent));
     }
 
     /**
