@@ -17,9 +17,9 @@ public class ViscosityForce extends Force {
     private int myKeyCode = KeyEvent.VK_V;
     /**
      * @param mass mass to apply force to
-     * @param forceToggle whether or not the force is on
+     * @param forces information about environment's forces
      */
-    public ViscosityForce (Mass mass, HashMap<Integer,Force> forces) {
+    public ViscosityForce (Mass mass, HashMap<Integer, Force> forces) {
         boolean forceToggle = forces.get(myKeyCode).getToggle();
         Force velocity = new Force(mass.getVelocity());
         velocity.negate();

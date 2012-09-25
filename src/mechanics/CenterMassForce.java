@@ -20,9 +20,9 @@ public class CenterMassForce extends Force {
     /**
      * @param mass mass to apply force to
      * @param assembly assembly of the mass
-     * @param forceToggle whether or not the force is on
+     * @param forces information about environment's forces
      */
-    public CenterMassForce (Mass mass, Assembly assembly, HashMap<Integer,Force> forces) {
+    public CenterMassForce (Mass mass, Assembly assembly, HashMap<Integer, Force> forces) {
         boolean forceToggle = forces.get(myKeyCode).getToggle();
         double xCenter = 0;
         double yCenter = 0;

@@ -36,14 +36,12 @@ public class WallForce extends Force {
                 break;
             case KeyEvent.VK_2:
                 angle = Canvas.LEFT_ANGLE;
-                distance =
-                        (container.getSize().width - mass.getCenter().getX()) /
+                distance = (container.getSize().width - mass.getCenter().getX()) /
                                 Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             case KeyEvent.VK_3:
                 angle = Canvas.UP_ANGLE;
-                distance =
-                        (container.getSize().height - mass.getCenter().getY()) /
+                distance = (container.getSize().height - mass.getCenter().getY()) /
                                 Canvas.FORCE_DISTANCE_DIVIDER;
                 break;
             case KeyEvent.VK_4:

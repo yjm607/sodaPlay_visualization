@@ -18,9 +18,9 @@ public class GravityForce extends Force {
     private int myKeyCode = KeyEvent.VK_G;
     /**
      * @param mass mass to apply force to
-     * @param forceToggle whether or not the force is on
+     * @param forces information about environment's forces
      */
-    public GravityForce (Mass mass, HashMap<Integer,Force> forces) {
+    public GravityForce (Mass mass, HashMap<Integer, Force> forces) {
         boolean forceToggle = forces.get(myKeyCode).getToggle();
         setMagnitude(ourGravityMagnitude);
         setDirection(ourGravityAngle);
