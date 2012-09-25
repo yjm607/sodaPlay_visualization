@@ -20,14 +20,6 @@ public class Environment {
     private int[] myKeyCodes =
             new int[] {KeyEvent.VK_V, KeyEvent.VK_G, KeyEvent.VK_M, KeyEvent.VK_1, KeyEvent.VK_2,
                        KeyEvent.VK_3, KeyEvent.VK_4};
-
-    private double myGravityAngle;
-    private double myGravityMagnitude;
-    private double myViscosity;
-    private double myCenterMassMagnitude;
-    private double myCenterMassExponent;
-    private HashMap<Force, Double> myRawWallForces;
-
     /**
      * Constructs environment
      * 
@@ -35,16 +27,6 @@ public class Environment {
      */
     public Environment (Canvas container) {
         myContainer = container;
-        initializeDefaults();
-    }
-
-    private void initializeDefaults () {
-        myGravityAngle = 0;
-        myGravityMagnitude = 0;
-        myViscosity = 0;
-        myCenterMassMagnitude = 0;
-        myCenterMassExponent = 0;
-        myRawWallForces = new HashMap<Force, Double>();
         Force blankForce = new Force();
         for (int keyCode : myKeyCodes) {
             myForces.put(keyCode, blankForce);
@@ -59,40 +41,17 @@ public class Environment {
      */
     public void add (Scanner line, String type) {
         if ("gravity".equals(type)) {
-            myGravityAngle = line.nextDouble();
-            myGravityMagnitude = line.nextDouble();
+            GravityForce.readInputLine(line);
         }
         else if ("viscosity".equals(type)) {
-            myViscosity = line.nextDouble();
+            ViscosityForce.readInputLine(line);
         }
         else if ("centermass".equals(type)) {
-            myCenterMassMagnitude = line.nextDouble();
-            myCenterMassExponent = line.nextDouble();
+            CenterMassForce.readInputLine(line);
         }
         else if ("wall".equals(type)) {
-            int id = line.nextInt();
-            double magnitude = line.nextDouble();
-            double exponent = line.nextDouble();
-            Force force = new Force();
-            switch (id) {
-                case 1:
-                    force = new Force(Canvas.DOWN_ANGLE, magnitude);
-                    break;
-                case 2:
-                    force = new Force(Canvas.LEFT_ANGLE, magnitude);
-                    break;
-                case 3:
-                    force = new Force(Canvas.UP_ANGLE, magnitude);
-                    break;
-                case 4:
-                    force = new Force(Canvas.RIGHT_ANGLE, magnitude);
-                    break;
-                default:
-                    break;
-            }
-            myRawWallForces.put(force, exponent);
+            WallForce.readInputLine(line);
         }
-
     }
 
     /**
@@ -116,10 +75,13 @@ public class Environment {
 
     private void resetAllForces (Mass mass, Assembly assembly) {
         clearForces();
-        setGravity(mass);
-        setViscosity(mass);
-        setCenterMassForce(mass, assembly);
-        setWallForce(mass);
+        myForces.put(KeyEvent.VK_G, new GravityForce(mass, myForces));
+        myForces.put(KeyEvent.VK_V, new ViscosityForce(mass, myForces));
+        myForces.put(KeyEvent.VK_M, new CenterMassForce(mass, assembly, myForces));
+        myForces.put(KeyEvent.VK_1, new WallForce(mass, myForces, KeyEvent.VK_1, myContainer));
+        myForces.put(KeyEvent.VK_2, new WallForce(mass, myForces, KeyEvent.VK_2, myContainer));
+        myForces.put(KeyEvent.VK_3, new WallForce(mass, myForces, KeyEvent.VK_3, myContainer));
+        myForces.put(KeyEvent.VK_4, new WallForce(mass, myForces, KeyEvent.VK_4, myContainer));
     }
 
     private void clearForces () {
@@ -128,35 +90,6 @@ public class Environment {
             Force blankForce = new Force();
             blankForce.setToggle(currentForceToggle);
             myForces.put(keyCode, blankForce);
-        }
-    }
-
-    private void setGravity (Mass mass) {
-        boolean currentToggle = myForces.get(KeyEvent.VK_G).getToggle();
-        Force gravityForce =
-                new GravityForce(mass, myGravityAngle, myGravityMagnitude, currentToggle);
-        myForces.put(KeyEvent.VK_G, gravityForce);
-    }
-
-    private void setViscosity (Mass mass) {
-        boolean currentToggle = myForces.get(KeyEvent.VK_V).getToggle();
-        Force viscosityForce = new ViscosityForce(mass, myViscosity, currentToggle);
-        myForces.put(KeyEvent.VK_V, viscosityForce);
-    }
-
-    private void setCenterMassForce (Mass mass, Assembly assembly) {
-        boolean currentToggle = myForces.get(KeyEvent.VK_M).getToggle();
-        Force centerMassForce =
-                new CenterMassForce(mass, assembly, myCenterMassMagnitude, myCenterMassExponent,
-                                    currentToggle);
-        myForces.put(KeyEvent.VK_M, centerMassForce);
-    }
-
-    private void setWallForce (Mass mass) {
-        for (Map.Entry<Force, Double> entry : myRawWallForces.entrySet()) {
-            WallForce wallForce =
-                    new WallForce(mass, entry.getKey(), entry.getValue(), myForces, myContainer);
-            myForces.put(wallForce.getKeyCode(), wallForce);
         }
     }
 

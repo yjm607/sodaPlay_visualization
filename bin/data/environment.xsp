@@ -1,4 +1,4 @@
-gravity 270 1
+gravity 270 0
 viscosity 0.01
 centermass 1 1.0
 wall 1 5 0
