@@ -1,12 +1,13 @@
 package mechanics;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import drawings.Bar;
 import drawings.Mass;
 import drawings.Muscle;
 import drawings.Spring;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 
 /**
  * Reads objects from files and puts them into object lists
@@ -16,6 +17,7 @@ import drawings.Spring;
 public class Factory {
     /**
      * reads files and makes Assemblies
+     * 
      * @param sim used to communicate with Simulation object
      * @param modelFile used to read files
      */
@@ -80,12 +82,12 @@ public class Factory {
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         if (ks >= 0) {
-            return new Spring((Mass) assembly.getDrawable(m1),
-                    (Mass) assembly.getDrawable(m2), restLength, ks);
+            return new Spring((Mass) assembly.getDrawable(m1), 
+                              (Mass) assembly.getDrawable(m2), restLength, ks);
         }
         else {
-            return new Bar((Mass) assembly.getDrawable(m1),
-                    (Mass) assembly.getDrawable(m2), restLength, ks);
+            return new Bar((Mass) assembly.getDrawable(m1), 
+                           (Mass) assembly.getDrawable(m2), restLength, ks);
         }
     }
 
@@ -95,7 +97,7 @@ public class Factory {
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
         double amplitude = line.nextDouble();
-        return new Muscle((Mass) assembly.getDrawable(m1),
-                (Mass) assembly.getDrawable(m2), restLength, ks, amplitude);
+        return new Muscle((Mass) assembly.getDrawable(m1), (Mass) assembly.getDrawable(m2),
+                          restLength, ks, amplitude);
     }
 }

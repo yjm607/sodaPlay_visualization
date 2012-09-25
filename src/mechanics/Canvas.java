@@ -1,5 +1,7 @@
 package mechanics;
 
+import drawings.Bar;
+import drawings.Mass;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,9 +18,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
-import drawings.Bar;
-import drawings.Mass;
-
 
 /**
  * Creates an component that is a viewer onto an animation.
@@ -51,6 +50,22 @@ public class Canvas extends JComponent {
      * walled area offset increment value
      */
     public static final int OFFSET_INCREMENT = 10;
+    /**
+     * angle representing direction "up"
+     */
+    public static final int UP_ANGLE = 270;
+    /**
+     * angle representing direction "down"
+     */
+    public static final int DOWN_ANGLE = 90;
+    /**
+     * angle representing direction "left"
+     */
+    public static final int LEFT_ANGLE = 180;
+    /**
+     * angle representing direction "right"
+     */
+    public static final int RIGHT_ANGLE = 0;
 
     // mouse dragging information
     private Assembly myNearestAssembly;
@@ -85,13 +100,12 @@ public class Canvas extends JComponent {
         setFocusable(true);
         requestFocus();
         // create timer to drive the animation
-        myTimer = new Timer(ONE_SECOND / FRAMES_PER_SECOND,
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed (ActionEvent e) {
-                        step((double) FRAMES_PER_SECOND / ONE_SECOND);
-                    }
-                });
+        myTimer = new Timer(ONE_SECOND / FRAMES_PER_SECOND, new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent e) {
+                step((double) FRAMES_PER_SECOND / ONE_SECOND);
+            }
+        });
         // initialize simulation
         myTarget = new Simulation(this);
         loadModel();
@@ -257,22 +271,19 @@ public class Canvas extends JComponent {
     private void createMouseDragger (Point point) {
         List<Assembly> myAssemblies = myTarget.getMyAssemblies();
         Mass nearestMass = null;
-        double minDistance = Math.max(getSize().getHeight(), 
-                getSize().getWidth());
+        double minDistance = Math.max(getSize().getHeight(), getSize().getWidth());
         for (Assembly a : myAssemblies) {
             Mass localNearestMass = a.getNearestMass(point);
-            double localMinDistance = point.distance(
-                    localNearestMass.getCenter());
+            double localMinDistance = point.distance(localNearestMass.getCenter());
             if (localMinDistance <= minDistance) {
                 nearestMass = localNearestMass;
                 myNearestAssembly = a;
                 minDistance = localMinDistance;
             }
         }
-        myMouseMass = new Mass(myMouseMassDefaultID, point.getX(),
-                point.getY(), myMouseMassDefaultMass);
-        myMouseBar = new Bar(myMouseMass, nearestMass, minDistance,
-                myMouseBarDefaultKVal);
+        myMouseMass =
+                new Mass(myMouseMassDefaultID, point.getX(), point.getY(), myMouseMassDefaultMass);
+        myMouseBar = new Bar(myMouseMass, nearestMass, minDistance, myMouseBarDefaultKVal);
         myNearestAssembly.add(myMouseMass);
         myNearestAssembly.add(myMouseBar);
     }

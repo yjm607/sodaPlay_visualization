@@ -5,15 +5,18 @@ import java.awt.Graphics2D;
 import mechanics.Assembly;
 import mechanics.Simulation;
 
+
 /**
  * Creates a Drawable Bar object
+ * 
  * @author Volodymyr Zavidovych & Jei Min Yoo
- *
+ * 
  */
 public class Bar extends Spring {
 
     /**
      * Construct a Bar object
+     * 
      * @param start is a Mass on one end
      * @param end is a Mass on the other end
      * @param length is the length of the Bar

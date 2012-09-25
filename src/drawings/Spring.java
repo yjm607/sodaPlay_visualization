@@ -19,6 +19,7 @@ public class Spring implements Drawable {
 
     /**
      * Construct a spring object
+     * 
      * @param start is a Mass on one end
      * @param end is a Mass on the other end
      * @param length is the length of the spring
@@ -47,8 +48,9 @@ public class Spring implements Drawable {
         // apply hooke's law to each attached mass
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
-        Force f = new Force(Force.angleBetween(dx, dy), myK *
-                (myLength - Force.distanceBetween(dx, dy)));
+        Force f =
+                new Force(Force.angleBetween(dx, dy), myK *
+                                                      (myLength - Force.distanceBetween(dx, dy)));
         myStart.applyForce(f);
         f.negate();
         myEnd.applyForce(f);
@@ -87,14 +89,17 @@ public class Spring implements Drawable {
     public double getXLengthComponent () {
         return myStart.getCenter().getX() - myEnd.getCenter().getX();
     }
+
     /**
      * gets spring's vertical length
      */
     public double getYLengthComponent () {
         return myStart.getCenter().getY() - myEnd.getCenter().getY();
     }
+
     /**
      * sets spring's natural length
+     * 
      * @param newLength is the new natural length
      */
     public void setLength (double newLength) {
@@ -105,12 +110,13 @@ public class Spring implements Drawable {
      * gets spring's current length
      */
     public double getDistanceBetweenEnds () {
-        return Math.sqrt(getXLengthComponent() * getXLengthComponent() +
-                getYLengthComponent() * getYLengthComponent());
+        return Math.sqrt(getXLengthComponent() * getXLengthComponent() + getYLengthComponent() *
+                         getYLengthComponent());
     }
 
     /**
      * changes spring's color as it changes length
+     * 
      * @param pen used to draw spring
      */
     public void chooseLineStyle (Graphics2D pen) {

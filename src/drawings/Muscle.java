@@ -18,15 +18,15 @@ public class Muscle extends Spring {
     private double myFrequency;
 
     /**
-     * Construct a muscle  object
+     * Construct a muscle object
+     * 
      * @param start is a Mass on one end
      * @param end is a Mass on the other end
      * @param length is the length of the muscle
      * @param kVal determines the k value of the muscle.
      * @param amplitude determines the amplitude of muscle movement.
      */
-    public Muscle (Mass start, Mass end, double length, double kVal,
-            double amplitude) {
+    public Muscle (Mass start, Mass end, double length, double kVal, double amplitude) {
         super(start, end, length, kVal);
         myAmplitude = amplitude;
         myInitialLength = length;
@@ -45,8 +45,8 @@ public class Muscle extends Spring {
      * changes muscle's natural strength as it extends and compresses.
      */
     public void updateMuscleNaturalLength () {
-        double newNaturalLength = myInitialLength + myAmplitude *
-                Math.sin(myFrequency * myMuscleAge);
+        double newNaturalLength =
+                myInitialLength + myAmplitude * Math.sin(myFrequency * myMuscleAge);
         setLength(newNaturalLength);
     }
 
@@ -58,7 +58,7 @@ public class Muscle extends Spring {
     @Override
     public void chooseLineStyle (Graphics2D pen) {
         double len = getDistanceBetweenEnds() - myInitialLength;
-        if (len < 0.0) {
+        if (len < 0) {
             pen.setColor(Color.BLUE);
         }
         else {

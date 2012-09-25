@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import mechanics.Assembly;
+import mechanics.Canvas;
 import mechanics.Force;
 import mechanics.Simulation;
 
 /**
- * 
  * @author Robert C. Duvall, edited by Jei Yoo & Volodymyr Zavidovych
  */
 public class Mass implements Drawable {
@@ -22,10 +22,6 @@ public class Mass implements Drawable {
     private double myMass;
     private Force myAcceleration;
     private boolean myMassIsFixed;
-    private final int myUpAngle = 270;
-    private final int myDownAngle = 90;
-    private final int myLeftAngle = 180;
-    private final int myRightAngle = 0;
     private final double myScaleConstant = -2.0;
 
     /**
@@ -60,9 +56,8 @@ public class Mass implements Drawable {
         getBounce(canvas);
         // move mass by velocity if mass isn't fixed
         if (!myMassIsFixed) {
-            myCenter.setLocation(
-                    myCenter.getX() + myVelocity.getXChange() * dt,
-                    myCenter.getY() + myVelocity.getYChange() * dt);
+            myCenter.setLocation(myCenter.getX() + myVelocity.getXChange() * dt,
+                                 myCenter.getY() + myVelocity.getYChange() * dt);
         }
     }
 
@@ -94,32 +89,25 @@ public class Mass implements Drawable {
     private void applyBounceForce (Dimension bounds, int walledAreaOffset) {
         Force normal = new Force();
         if (getLeft() < -walledAreaOffset) {
-            normal = new Force(myRightAngle, 1);
-            setCenter((getSize().width / 2) - walledAreaOffset,
-                    getCenter().getY());
+            normal = new Force(Canvas.RIGHT_ANGLE, 1);
+            setCenter((getSize().width / 2) - walledAreaOffset, getCenter().getY());
         }
         else if (getRight() > bounds.width + walledAreaOffset) {
-            normal = new Force(myLeftAngle, 1);
-            setCenter(bounds.width - getSize().width / 2 + walledAreaOffset,
-                    getCenter().getY());
+            normal = new Force(Canvas.LEFT_ANGLE, 1);
+            setCenter(bounds.width - getSize().width / 2 + walledAreaOffset, getCenter().getY());
         }
         if (getTop() < -walledAreaOffset) {
-            normal = new Force(myDownAngle, 1);
-            setCenter(getCenter().getX(), 
-                    (getSize().height / 2) - walledAreaOffset);
+            normal = new Force(Canvas.DOWN_ANGLE, 1);
+            setCenter(getCenter().getX(), (getSize().height / 2) - walledAreaOffset);
         }
         else if (getBottom() > bounds.height + walledAreaOffset) {
-            normal = new Force(myUpAngle, 1);
-            setCenter(getCenter().getX(),
-                    bounds.height - getSize().height / 2 + walledAreaOffset);
+            normal = new Force(Canvas.UP_ANGLE, 1);
+            setCenter(getCenter().getX(), bounds.height - getSize().height / 2 + walledAreaOffset);
         }
-        normal.scale(
-                myScaleConstant *
-                normal.getRelativeMagnitude(myVelocity) *
-                myVelocity.getMagnitude());
+        normal.scale(myScaleConstant * normal.getRelativeMagnitude(myVelocity) *
+                     myVelocity.getMagnitude());
         myVelocity.sum(normal);
     }
-
 
     /**
      * Returns shape's velocity.
@@ -130,6 +118,7 @@ public class Mass implements Drawable {
 
     /**
      * Resets shape's velocity.
+     * 
      * @param direction sets velocity direction
      * @param magnitude sets velocity magnitude
      */
@@ -146,6 +135,7 @@ public class Mass implements Drawable {
 
     /**
      * Resets shape's center.
+     * 
      * @param x sets x coordinate of the mass.
      * @param y sets y coordinate of the mass.
      */
@@ -155,14 +145,13 @@ public class Mass implements Drawable {
 
     /**
      * Shift shape's center by increment in the specified direction.
+     * 
      * @param increment determines how much to change the location in one step.
      * @param angle determines the angle of the change.
      */
     public void shiftCenter (double increment, double angle) {
-        setCenter(
-                getCenter().getX() + increment *
-                        Math.cos(Math.toRadians(angle)), getCenter().getY() +
-                        increment * Math.sin(Math.toRadians(angle)));
+        setCenter(getCenter().getX() + increment * Math.cos(Math.toRadians(angle)),
+                  getCenter().getY() + increment * Math.sin(Math.toRadians(angle)));
     }
 
     /**

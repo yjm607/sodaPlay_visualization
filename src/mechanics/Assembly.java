@@ -1,12 +1,11 @@
 package mechanics;
 
+import drawings.Drawable;
+import drawings.Mass;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import drawings.Drawable;
-import drawings.Mass;
-
 
 /**
  * Creates Assembly object that contains Drawable objects.
@@ -87,12 +86,11 @@ public class Assembly {
      */
     public Mass getNearestMass (Point point) {
         Mass nearestMass = null;
-        double minDistance = Math.max(mySimulation.getSize().getHeight(),
-                mySimulation.getSize().getWidth());
+        double minDistance =
+                Math.max(mySimulation.getSize().getHeight(), mySimulation.getSize().getWidth());
         for (Drawable d : myDrawings) {
             if ("mass".equals(d.getClassName())) {
-                double distance = Force.distanceBetween(point,
-                        ((Mass) d).getCenter());
+                double distance = Force.distanceBetween(point, ((Mass) d).getCenter());
                 if (distance < minDistance) {
                     nearestMass = (Mass) d;
                     minDistance = distance;
