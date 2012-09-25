@@ -13,7 +13,7 @@ import java.util.List;
  * 
  */
 /**
- * @author Jei Min Yoo
+ * @author Robert C. Duvall
  * 
  */
 public class Simulation {

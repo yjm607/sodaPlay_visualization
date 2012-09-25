@@ -17,6 +17,13 @@ public class Spring implements Drawable {
     private double myLength;
     private double myK;
 
+    /**
+     * Construct a spring object
+     * @param start is a Mass on one end
+     * @param end is a Mass on the other end
+     * @param length is the length of the spring
+     * @param kVal determines K value of the spring
+     */
     public Spring (Mass start, Mass end, double length, double kVal) {
         myStart = start;
         myEnd = end;
@@ -40,8 +47,8 @@ public class Spring implements Drawable {
         // apply hooke's law to each attached mass
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
-        Force f = new Force(Force.angleBetween(dx, dy), myK
-                * (myLength - Force.distanceBetween(dx, dy)));
+        Force f = new Force(Force.angleBetween(dx, dy), myK *
+                (myLength - Force.distanceBetween(dx, dy)));
         myStart.applyForce(f);
         f.negate();
         myEnd.applyForce(f);
@@ -57,6 +64,9 @@ public class Spring implements Drawable {
         return "string";
     }
 
+    /**
+     * forces spring's length to its natural length
+     */
     public void forceLengthToNatural () {
         double dx = getXLengthComponent();
         double dy = getYLengthComponent();
@@ -71,23 +81,38 @@ public class Spring implements Drawable {
         }
     }
 
+    /**
+     * gets spring's horizontal length
+     */
     public double getXLengthComponent () {
         return myStart.getCenter().getX() - myEnd.getCenter().getX();
     }
-
+    /**
+     * gets spring's vertical length
+     */
     public double getYLengthComponent () {
         return myStart.getCenter().getY() - myEnd.getCenter().getY();
     }
-
+    /**
+     * sets spring's natural length
+     * @param newLength is the new natural length
+     */
     public void setLength (double newLength) {
         myLength = newLength;
     }
 
+    /**
+     * gets spring's current length
+     */
     public double getDistanceBetweenEnds () {
-        return Math.sqrt(getXLengthComponent() * getXLengthComponent()
-                + getYLengthComponent() * getYLengthComponent());
+        return Math.sqrt(getXLengthComponent() * getXLengthComponent() +
+                getYLengthComponent() * getYLengthComponent());
     }
 
+    /**
+     * changes spring's color as it changes length
+     * @param pen used to draw spring
+     */
     public void chooseLineStyle (Graphics2D pen) {
         double len = getDistanceBetweenEnds() - myLength;
         if (len < 0.0) {

@@ -8,7 +8,6 @@ import mechanics.Assembly;
 import mechanics.Force;
 import mechanics.Simulation;
 
-
 /**
  * 
  * @author Robert C. Duvall, edited by Jei Yoo & Volodymyr Zavidovych
@@ -18,16 +17,22 @@ public class Mass implements Drawable {
     private Point2D myCenter;
     private Force myVelocity;
     private Dimension mySize;
+    private final int mySizeConstant = 16;
     private int myID;
     private double myMass;
     private Force myAcceleration;
-    private boolean isFixed;
+    private boolean myMassIsFixed;
+    private final int myUpAngle = 270;
+    private final int myDownAngle = 90;
+    private final int myLeftAngle = 180;
+    private final int myRightAngle = 0;
+    private final double myScaleConstant = -2.0;
 
     /**
-     * @param id
-     * @param x
-     * @param y
-     * @param mass
+     * @param id is ID of the Mass
+     * @param x is x position of Mass
+     * @param y is Y position of Mass
+     * @param mass is the mass(weight) value of the Mass
      */
     public Mass (int id, double x, double y, double mass) {
         myAcceleration = new Force();
@@ -35,8 +40,8 @@ public class Mass implements Drawable {
         myID = id;
         setCenter(x, y);
         setVelocity(0, 0);
-        mySize = new Dimension(16, 16);
-        isFixed = myMass <= 0;
+        mySize = new Dimension(mySizeConstant, mySizeConstant);
+        myMassIsFixed = myMass <= 0;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class Mass implements Drawable {
         myAcceleration.reset();
         getBounce(canvas);
         // move mass by velocity if mass isn't fixed
-        if (!isFixed) {
+        if (!myMassIsFixed) {
             myCenter.setLocation(
                     myCenter.getX() + myVelocity.getXChange() * dt,
                     myCenter.getY() + myVelocity.getYChange() * dt);
@@ -83,31 +88,38 @@ public class Mass implements Drawable {
     private void getBounce (Simulation canvas) {
         Dimension bounds = canvas.getSize();
         int walledAreaOffset = canvas.getMyWalledAreaOffset();
+        applyBounceForce(bounds, walledAreaOffset);
+    }
+
+    private void applyBounceForce (Dimension bounds, int walledAreaOffset) {
         Force normal = new Force();
         if (getLeft() < -walledAreaOffset) {
-            normal = new Force(0, 1);
-            setCenter((getSize().width / 2) - walledAreaOffset, getCenter()
-                    .getY());
+            normal = new Force(myRightAngle, 1);
+            setCenter((getSize().width / 2) - walledAreaOffset,
+                    getCenter().getY());
         }
         else if (getRight() > bounds.width + walledAreaOffset) {
-            normal = new Force(180, 1);
+            normal = new Force(myLeftAngle, 1);
             setCenter(bounds.width - getSize().width / 2 + walledAreaOffset,
                     getCenter().getY());
         }
         if (getTop() < -walledAreaOffset) {
-            normal = new Force(90, 1);
-            setCenter(getCenter().getX(), (getSize().height / 2)
-                    - walledAreaOffset);
+            normal = new Force(myDownAngle, 1);
+            setCenter(getCenter().getX(), 
+                    (getSize().height / 2) - walledAreaOffset);
         }
         else if (getBottom() > bounds.height + walledAreaOffset) {
-            normal = new Force(270, 1);
-            setCenter(getCenter().getX(), bounds.height - getSize().height / 2
-                    + walledAreaOffset);
+            normal = new Force(myUpAngle, 1);
+            setCenter(getCenter().getX(),
+                    bounds.height - getSize().height / 2 + walledAreaOffset);
         }
-        normal.scale(-2.0 * normal.getRelativeMagnitude(myVelocity)
-                * myVelocity.getMagnitude());
+        normal.scale(
+                myScaleConstant *
+                normal.getRelativeMagnitude(myVelocity) *
+                myVelocity.getMagnitude());
         myVelocity.sum(normal);
     }
+
 
     /**
      * Returns shape's velocity.
@@ -118,6 +130,8 @@ public class Mass implements Drawable {
 
     /**
      * Resets shape's velocity.
+     * @param direction sets velocity direction
+     * @param magnitude sets velocity magnitude
      */
     public void setVelocity (double direction, double magnitude) {
         myVelocity = new Force(direction, magnitude);
@@ -132,6 +146,8 @@ public class Mass implements Drawable {
 
     /**
      * Resets shape's center.
+     * @param x sets x coordinate of the mass.
+     * @param y sets y coordinate of the mass.
      */
     public void setCenter (double x, double y) {
         myCenter = new Point2D.Double(x, y);
@@ -139,12 +155,14 @@ public class Mass implements Drawable {
 
     /**
      * Shift shape's center by increment in the specified direction.
+     * @param increment determines how much to change the location in one step.
+     * @param angle determines the angle of the change.
      */
     public void shiftCenter (double increment, double angle) {
         setCenter(
-                getCenter().getX() + increment
-                        * Math.cos(Math.toRadians(angle)), getCenter().getY()
-                        + increment * Math.sin(Math.toRadians(angle)));
+                getCenter().getX() + increment *
+                        Math.cos(Math.toRadians(angle)), getCenter().getY() +
+                        increment * Math.sin(Math.toRadians(angle)));
     }
 
     /**
@@ -188,7 +206,7 @@ public class Mass implements Drawable {
      * Reports fixed-ess state.
      */
     public boolean isFixed () {
-        return isFixed;
+        return myMassIsFixed;
     }
 
     /**

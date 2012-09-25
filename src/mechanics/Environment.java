@@ -147,7 +147,7 @@ public class Environment {
         double dy = yCenter / totalMass - mass.getCenter().getY();
         double angle = Force.angleBetween(dx, dy);
         double distance = Force.distanceBetween(dx, dy)
-                / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                / Canvas.FORCE_DISTANCE_DIVIDER;
         double magnitude = myCenterMassForceMagnitude
                 / Math.pow(distance, myCenterMassExponent);
         Force centerMassForce = new Force(angle, magnitude);
@@ -165,7 +165,7 @@ public class Environment {
             switch ((int) oneWallForce.getDirection()) {
                 case 90:
                     distance = mass.getCenter().getY()
-                            / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                            / Canvas.FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_1)[1];
                     myForces.put(KeyEvent.VK_1, new Object[] { oneWallForce,
@@ -174,7 +174,7 @@ public class Environment {
                 case 180:
                     distance = (myContainer.getSize().width - mass.getCenter()
                             .getX())
-                            / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                            / Canvas.FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_2)[1];
                     myForces.put(KeyEvent.VK_2, new Object[] { oneWallForce,
@@ -183,7 +183,7 @@ public class Environment {
                 case 270:
                     distance = (myContainer.getSize().height - mass.getCenter()
                             .getY())
-                            / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                            / Canvas.FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_3)[1];
                     myForces.put(KeyEvent.VK_3, new Object[] { oneWallForce,
@@ -192,7 +192,7 @@ public class Environment {
 
                 case 0:
                     distance = mass.getCenter().getX()
-                            / Canvas.CENTER_MASS_FORCE_DISTANCE_DIVIDER;
+                            / Canvas.FORCE_DISTANCE_DIVIDER;
                     oneWallForce.scale(1 / Math.pow(distance, exponent));
                     currentForceToggle = (Boolean) myForces.get(KeyEvent.VK_4)[1];
                     myForces.put(KeyEvent.VK_4, new Object[] { oneWallForce,

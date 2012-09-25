@@ -8,17 +8,21 @@ import drawings.Mass;
 import drawings.Muscle;
 import drawings.Spring;
 
-
 /**
  * Reads objects from files and puts them into object lists
  * 
  * @author Robert C. Duvall, edited by Jei Yoo & Volodymyr Zavidovych
  */
 public class Factory {
+    /**
+     * reads files and makes Assemblies
+     * @param sim used to communicate with Simulation object
+     * @param modelFile used to read files
+     */
     public void loadModel (Simulation sim, File modelFile) {
         try {
             Scanner input = new Scanner(modelFile);
-            if (modelFile.getName().equals("environment.xsp")) {
+            if ("environment.xsp".equals(modelFile.getName())) {
                 loadEnvironment(sim, input);
             }
             else {
@@ -75,12 +79,14 @@ public class Factory {
         int m2 = line.nextInt();
         double restLength = line.nextDouble();
         double ks = line.nextDouble();
-        if (ks >= 0)
+        if (ks >= 0) {
             return new Spring((Mass) assembly.getDrawable(m1),
                     (Mass) assembly.getDrawable(m2), restLength, ks);
-        else return new Bar((Mass) assembly.getDrawable(m1),
-                (Mass) assembly.getDrawable(m2), restLength, ks);
-
+        }
+        else {
+            return new Bar((Mass) assembly.getDrawable(m1),
+                    (Mass) assembly.getDrawable(m2), restLength, ks);
+        }
     }
 
     private Spring muscleCommand (Scanner line, Assembly assembly) {

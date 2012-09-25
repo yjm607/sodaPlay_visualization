@@ -17,6 +17,14 @@ public class Muscle extends Spring {
     private double myMuscleAge;
     private double myFrequency;
 
+    /**
+     * Construct a muscle  object
+     * @param start is a Mass on one end
+     * @param end is a Mass on the other end
+     * @param length is the length of the muscle
+     * @param kVal determines the k value of the muscle.
+     * @param amplitude determines the amplitude of muscle movement.
+     */
     public Muscle (Mass start, Mass end, double length, double kVal,
             double amplitude) {
         super(start, end, length, kVal);
@@ -33,9 +41,12 @@ public class Muscle extends Spring {
         myMuscleAge += dt;
     }
 
+    /**
+     * changes muscle's natural strength as it extends and compresses.
+     */
     public void updateMuscleNaturalLength () {
-        double newNaturalLength = myInitialLength + myAmplitude
-                * Math.sin(myFrequency * myMuscleAge);
+        double newNaturalLength = myInitialLength + myAmplitude *
+                Math.sin(myFrequency * myMuscleAge);
         setLength(newNaturalLength);
     }
 
